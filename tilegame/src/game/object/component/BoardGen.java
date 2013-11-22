@@ -1,24 +1,27 @@
 package game.object.component;
 
 import game.Game;
-import game.inventory.FireBomb;
-import game.inventory.FireStorm;
-import game.inventory.InsectDrop;
-import game.inventory.PoisonBomb;
 import game.object.GameBoard;
+import game.object.inventory.FireBomb;
+import game.object.inventory.FireStorm;
+import game.object.inventory.InsectDrop;
+import game.object.inventory.PoisonBomb;
 
 import java.util.Random;
 
 import org.newdawn.slick.SlickException;
-
+/*
+ * Class that handles world generation by first randomly scattering mountains, extends them then it randomly scatters dirt.
+ * The next part of world generation simulates turns with particle generation turned off and weopons are used on the land.
+ * Then it just adds finishing touches like getting rid of single tiles.
+ */
 public class BoardGen
 {
-	public static enum State{Off, BasicGenerate, FirstUpdate, SecondUpdate, ThirdUpdate, ModLand, SecondModding, FinishingTouches}
-	public State state = State.Off;
 	private GameBoard board;
 	private int[][] grid, terrainGrid, burnGrid;
 	private Random rnd = new Random();
 	private int x, y, enemies, start, counter;
+	//weopons used to modify the world
 	private FireBomb fireBomb;
 	private PoisonBomb poisonBomb;
 	private InsectDrop insectDrop;
@@ -36,20 +39,12 @@ public class BoardGen
 		fireBomb.setCount(1000);
 		insectDrop.setCount(1000);
 		fireStorm.setCount(1000);
+		generateLand();
+		modLand();
+		prepareForGame();
 	}
-	public void generate() throws SlickException
+	public void generateLand() throws SlickException
 	{
-		if(state != State.Off)counter++;
-		if(state == State.BasicGenerate)basicGenerate();
-		if(state == State.FirstUpdate)firstUpdate();
-		if(state == State.SecondUpdate)secondUpdate();
-		if(state == State.ThirdUpdate)thirdUpdate();
-		if(state == State.ModLand)modLand();
-		if(state == State.FinishingTouches)finishingTouches();
-	}
-	public void basicGenerate() throws SlickException
-	{
-		state = State.FirstUpdate;
 		board.getParticleGen().setParticleGen(false);
 		grid = board.getGrid();
 		terrainGrid = board.getTerrainGrid();
@@ -68,40 +63,17 @@ public class BoardGen
 			addDirt();
 		}
 	}
-	public void firstUpdate() throws SlickException
+	public void modLand() throws SlickException
 	{
-		state = State.SecondUpdate;
 		for(int i = 0; i < 15;i++)
 		{
 			addEnemy();
 		}
-		for(int i = 0; i < 60; i++)
+		for(int i = 0; i < 260; i++)
 		{
 			board.tileUpdate();
 			board.setTurn(0);
 		}
-	}
-	public void secondUpdate() throws SlickException
-	{
-		state = State.ThirdUpdate;
-		for(int i = 0; i < 80; i++)
-		{
-			board.tileUpdate();
-			board.setTurn(0);
-		}
-	}
-	public void thirdUpdate() throws SlickException
-	{
-		state = State.ModLand;
-		for(int i = 0; i < 80; i++)
-		{
-			board.tileUpdate();
-			board.setTurn(0);
-		}
-	}
-	public void modLand() throws SlickException
-	{
-		state = State.FinishingTouches;
 		clearBoard();
 		for(int i = 0; i < 150; i++)
 		{
@@ -123,9 +95,8 @@ public class BoardGen
 			board.setTurn(0);
 		}
 	}
-	public void finishingTouches() throws SlickException
+	public void prepareForGame() throws SlickException
 	{
-		state = State.Off;
 		for(int x = 0; x < grid.length;x++)
 		{
 			for(int y = 0; y < grid[0].length;y++)
@@ -133,6 +104,22 @@ public class BoardGen
 				burnGrid[x][y] = 0;
 			}
 		}
+		removeSingleTiles();
+		for(int i = 0; i < enemies;i++)
+		{
+			addEnemy();
+		}
+		board.setGrid(grid);
+		board.setTerrainGrid(terrainGrid);
+		for(int i = 0; i < start; i++)
+		{
+			board.tileUpdate();
+			board.setTurn(0);
+		}
+		board.getParticleGen().setParticleGen(true);
+	}
+	public void removeSingleTiles()
+	{
 		for(int x = 0; x < Game.TWidth;x++)
 		{
 			for(int y = 0; y < Game.THeight;y++)
@@ -147,18 +134,6 @@ public class BoardGen
 				}
 			}
 		}
-		for(int i = 0; i < enemies;i++)
-		{
-			addEnemy();
-		}
-		board.setGrid(grid);
-		board.setTerrainGrid(terrainGrid);
-		for(int i = 0; i < start; i++)
-		{
-			board.tileUpdate();
-			board.setTurn(0);
-		}
-		board.getParticleGen().setParticleGen(true);
 	}
 	public boolean alone(int x, int y, int id, int altId)
 	{

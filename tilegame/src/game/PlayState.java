@@ -27,7 +27,6 @@ public class PlayState extends BasicGameState
 				world = new World(MenuState.load);
 			} catch (InterruptedException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -36,7 +35,6 @@ public class PlayState extends BasicGameState
 			world.update(gc, sbg, delta);
 		} catch (InterruptedException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

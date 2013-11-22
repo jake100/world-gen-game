@@ -2,11 +2,11 @@ package game.object;
 
 import game.ChooseFile;
 import game.Game;
-import game.inventory.Inventory;
 import game.object.component.BoardComponent;
 import game.object.component.BoardGen;
 import game.object.component.GameOver;
 import game.object.component.ParticleGenerator;
+import game.object.inventory.Inventory;
 import game.util.Circle;
 import game.util.File;
 import game.world.World;
@@ -22,20 +22,23 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
-
+/*
+ * Either loads from file or the board gets randomly generated in the constructor.
+ * Loading from a file is way faster.
+ * Different tile ids for each grid.
+ */
 public class GameBoard extends Board
 {
-	//grid ids
+	//grid ids 0 = null
 	public static final int air = 0, living = 10, typesOfTile = 19, boss = typesOfTile - 1, meteor = 99;
-	//terrain ids
 	public static final int stone = 0, dirt = 1, grass = 2, charred = 3, barren = 4, mountain = 5, poisoned = 6, typesOfTerrain = 7;
-	//drop ids
 	public static final int no_foliage = 0, tall_grass = 1, plant = 2, typesOfFoliage = 3;
 	public static final int no_placeable = 0, villager = 1, canon = 2, typesOfPlaceable = 3;
 	public static final int no_insect = 0, insect_drop = 1, insect = 2, typesOfInsect = 3;
+	
 	protected int turns = 100, turn = 0, stopTime = 0,counter = 0;
 	protected GameOver gameOver = null;
-	protected BoardGen boardGen;
+	protected BoardGen boardGen;//world generation class
 	protected ParticleGenerator particleGen = new ParticleGenerator(this);
 	protected boolean playSound = false, godMode = false;
 	protected File file;
@@ -96,18 +99,12 @@ public class GameBoard extends Board
 		    		burnGrid = file.getBurnGrid();
 			}
 		}
-		else
-		{
-			boardGen.state = BoardGen.State.BasicGenerate;
-			boardGen.generate();
-		}
 		playSound = true;
 		if(godMode)godUpdate();
 	}
     public void update(GameContainer gc, StateBasedGame sbg, World world, int delta) throws SlickException
     {
     	super.update(gc, sbg, world, delta);
-    	boardGen.generate();
     	if(gameOver == null)
     	{
     		addBoardComponent(particleGen);
@@ -127,7 +124,6 @@ public class GameBoard extends Board
     	if(stopTime == 0)
     	{
     		turn++;
-    		gameInfo.addPoints(50);
         	for(int i = 0; i < grid.length; i++)
     		{
     			for(int j = 0; j < grid[0].length; j++)
@@ -156,9 +152,9 @@ public class GameBoard extends Board
     				if(placeableGrid[i][j] == canon)
     				{
     					spawnCload(i, j, 10);
-    					if(rnd.nextInt(3) == 0)shell(i, j, 15);
-    					else shell(i, j, 12);
-    					shell(i, j, 8);
+    					if(rnd.nextInt(3) == 0)shellArea(i, j, 15);
+    					else shellArea(i, j, 12);
+    					shellArea(i, j, 8);
   
     				}
     				if(insectGrid[i][j] == insect)
@@ -204,7 +200,7 @@ public class GameBoard extends Board
     	if(dollars < dollarMin)dollars = dollarMin;
     	turn = 0;
     }
-    public void shell(int x, int y, int radius) throws SlickException
+    public void shellArea(int x, int y, int radius) throws SlickException
     {
     	Circle circle = new Circle();
     	int radius0 = rnd.nextInt(radius - 1) + 1;
@@ -216,7 +212,7 @@ public class GameBoard extends Board
 			damage(xx, yy, 18);
 			spawnFire(xx, yy, 3);
 		}
-		else shell(x, y, radius);
+		else shellArea(x, y, radius);
     }
     public void moveInsect(int i, int j)
     {
@@ -305,10 +301,17 @@ public class GameBoard extends Board
 		if(validSpot(x, y) || validSpot(x, y + 1) || validSpot(x, y - 1) || validSpot(x + 1, y) || validSpot(x - 1, y))canLevelUp = true;
     	if(tX >= 0 && tY >= 0 && tX < Game.TWidth && tY < Game.THeight  && grid[tX][tY] != meteor && grid[tX][tY] != boss)
     	{
-    		if(validFireSpot(tX, tY) && terrainGrid[tX][tY] == mountain && grid[x][y] == boss && rnd.nextInt(5) == 0)terrainGrid[tX][tY] = stone;
-    		if(validFireSpot(tX, tY) && terrainGrid[tX][tY] == stone && grid[x][y] == boss && rnd.nextInt(5) == 0)terrainGrid[tX][tY] = dirt;
-    		if(validFireSpot(tX, tY) && terrainGrid[tX][tY] == charred && grid[x][y] == boss && rnd.nextInt(5) == 0)terrainGrid[tX][tY] = dirt;
-    		if(validFireSpot(tX, tY) && terrainGrid[tX][tY] == dirt && grid[x][y] == boss && rnd.nextInt(500) == 0)terrainGrid[tX][tY] = grass;
+    		if(validFireSpot(tX, tY) && grid[x][y] == boss)
+    		{
+    			if(rnd.nextInt(5) == 0)
+    			{
+            		if(terrainGrid[tX][tY] == mountain)terrainGrid[tX][tY] = stone;
+            		if(terrainGrid[tX][tY] == stone)terrainGrid[tX][tY] = dirt;
+            		if(terrainGrid[tX][tY] == charred)terrainGrid[tX][tY] = dirt;
+    			}
+        		if(terrainGrid[tX][tY] == dirt && rnd.nextInt(500) == 0)terrainGrid[tX][tY] = grass;
+    		}
+
     		if(grid[tX][tY] < boss)
     		{
     			if(terrainGrid[tX][tY] == dirt)grid[tX][tY]++;

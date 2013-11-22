@@ -2,19 +2,19 @@ package game.object.component;
 
 import game.Game;
 import game.ShopButton;
-import game.inventory.CanonPlacer;
-import game.inventory.FireBomb;
-import game.inventory.FireStorm;
-import game.inventory.InsectDrop;
-import game.inventory.Inventory;
-import game.inventory.Item;
-import game.inventory.Laser;
-import game.inventory.PoisonBomb;
-import game.inventory.RockDrop;
-import game.inventory.ShopItem;
-import game.inventory.StopTime;
-import game.inventory.VillagerDrop;
 import game.object.GameBoard;
+import game.object.inventory.CanonPlacer;
+import game.object.inventory.FireBomb;
+import game.object.inventory.FireStorm;
+import game.object.inventory.InsectDrop;
+import game.object.inventory.Inventory;
+import game.object.inventory.Item;
+import game.object.inventory.Laser;
+import game.object.inventory.PoisonBomb;
+import game.object.inventory.RockDrop;
+import game.object.inventory.ShopItem;
+import game.object.inventory.StopTime;
+import game.object.inventory.VillagerDrop;
 import game.util.GameImage;
 import game.world.World;
 
@@ -24,7 +24,9 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
-
+/*
+ * Sets title, price, location, icon and type for each shop Item then renders a icon, prints cost and amount in inventory.
+ */
 public class Shop extends BoardRender
 {
 	private Image iconBack, leftTile, midTile, rightTile;
@@ -141,7 +143,6 @@ public class Shop extends BoardRender
 	{
 		this.width = width;
 	}
-
 	public int getHeight()
 	{
 		return height;

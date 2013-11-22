@@ -1,10 +1,10 @@
 package game.util;
 
 import game.Game;
-import game.inventory.Inventory;
 import game.object.GameBoard;
 import game.object.GameInfo;
 import game.object.component.BoardComponent;
+import game.object.inventory.Inventory;
 import game.world.World;
 
 import java.io.BufferedReader;

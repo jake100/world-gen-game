@@ -1,8 +1,8 @@
 package game.object.component;
 
 import game.Game;
-import game.inventory.Inventory;
 import game.object.GameBoard;
+import game.object.inventory.Inventory;
 import game.util.SoundBank;
 import game.world.World;
 
@@ -10,7 +10,9 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
-
+/*
+ * Handles key, mouse clicks and sets a delay.
+ */
 public class PlayerInput extends BoardComponent
 {
 	private int mx, my, gridX, gridY, clickCount;

@@ -1,8 +1,8 @@
 package game;
 
-import game.inventory.Inventory;
 import game.object.GameInfo;
 import game.object.component.PlayerInput;
+import game.object.inventory.Inventory;
 import game.util.File;
 
 import javax.swing.JFileChooser;

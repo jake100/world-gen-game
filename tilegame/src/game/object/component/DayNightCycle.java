@@ -9,7 +9,10 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
-
+/*
+ * adds a black box covering the screen with adjustable opacitiy
+ * can be set by time to simulate a day night cycle.
+ */
 public class DayNightCycle extends BoardRender
 {
 	private double morning = .5;

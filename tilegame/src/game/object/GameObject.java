@@ -9,7 +9,9 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
-
+/*
+ * Owns a list of game components that can be added, removed, searched for, turned off or on, swapped and are updated when this class is.
+ */
 public abstract class GameObject extends GameClass
 {
 	protected String id;

@@ -1,6 +1,5 @@
 package game.world;
 import game.PauseMenu;
-import game.inventory.Inventory;
 import game.object.GameBoard;
 import game.object.GameInfo;
 import game.object.GameObject;
@@ -11,6 +10,7 @@ import game.object.component.Hud;
 import game.object.component.PlayerInput;
 import game.object.component.Shop;
 import game.object.component.TileRender;
+import game.object.inventory.Inventory;
 import game.util.File;
 
 import java.util.ArrayList;
