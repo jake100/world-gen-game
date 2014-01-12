@@ -24,6 +24,11 @@ public class MenuButton extends Button
 		height = buttonImage.getHeight();
 		x = (int) ((Game.Width / 2 - buttonImage.getWidth()) * scale / 2);
 	}
+	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException
+	{
+		super.update(gc, sbg, delta);
+		
+	}
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException
 	{
 		if(entered)litButtonImage.draw(x, y, scale);

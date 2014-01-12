@@ -29,7 +29,7 @@ public class Laser extends Item
 			{
 				if(centerBurnGrid[x][y] == 1)
 				{
-					if(burnGrid[x][y] > 0)board.spawnFire(x, y, 1);
+					if(burnGrid[x][y] != GameBoard.air)board.spawnFire(x, y, 1);
 					else centerBurnGrid[x][y] = 0;
 				}
 			}
@@ -76,7 +76,6 @@ public class Laser extends Item
 		if(terrainGrid[x][y] == GameBoard.grass || terrainGrid[x][y] == GameBoard.dirt) terrainGrid[x][y] = GameBoard.charred;
 		burnGrid[x][y] = 40;
 	}
-	@Override
 	public void fire(int x, int y, Dir dir) throws SlickException
 	{
 	}

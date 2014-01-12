@@ -11,7 +11,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 /*
- * This class manages particles and sets a cap on the amount of particles for performance reasons, can also be disabled.
+ * This class manages particles and sets a cap on the amount of particles for performance reasons, can be turned off.
  * After the max number of particles has been reached the oldest particle will be destroyed.
  */
 public class ParticleGenerator extends BoardRender

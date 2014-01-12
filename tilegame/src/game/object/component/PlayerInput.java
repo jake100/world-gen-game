@@ -17,7 +17,7 @@ public class PlayerInput extends BoardComponent
 {
 	private int mx, my, gridX, gridY, clickCount;
 	private Input input;
-	private boolean up = false, down = false, left = false, right = false, fKey, click, altClick;
+	private boolean up = false, down = false, left = false, right = false, rKey, fKey, click, altClick;
 	private boolean mouseWait = false;
 	private Inventory inventory;
 	private Shop shop;
@@ -37,6 +37,7 @@ public class PlayerInput extends BoardComponent
 		click = false;
 		altClick = false;
 		fKey = false;
+		rKey = false;
 		if(enabled)
 		{
 			for(int i = 0; i < shop.getWidth();i++)
@@ -70,6 +71,7 @@ public class PlayerInput extends BoardComponent
 				}
 			}
 			input = gc.getInput();
+			if(input.isKeyDown(Input.KEY_R))rKey = true;
 			mx = input.getMouseX();
 			my = input.getMouseY();
 			
@@ -233,5 +235,14 @@ public class PlayerInput extends BoardComponent
 	public void tileUpdate() throws SlickException
 	{
 	}
+	public boolean isrKey()
+	{
+		return rKey;
+	}
+	public void setrKey(boolean rKey)
+	{
+		this.rKey = rKey;
+	}
+	
 	
 }

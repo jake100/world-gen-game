@@ -11,6 +11,9 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class Inventory extends BoardRender
 {
+	/*
+	 * 
+	 */
 	public static enum Dir{Left, Right, Up, Down, Not_Moving}
 	private Item[] items;
 	public Inventory(GameBoard owner) throws SlickException
@@ -18,11 +21,7 @@ public class Inventory extends BoardRender
 		super(owner);
 		items = new Item[3];
 		id = "Inventory";
-		items[0] = new VillagerDrop(owner);
-		items[0].setCount(10);
-		items[1] = new NothingEquiped(owner);
-		
-		items[2] = new NothingEquiped(owner);
+		reset();
 	}
 
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException
@@ -46,8 +45,9 @@ public class Inventory extends BoardRender
 		if(items[item] instanceof PoisonBomb)return 5;
 		if(items[item] instanceof FireStorm)return 6;
 		if(items[item] instanceof StopTime)return 7;
-		if(items[item] instanceof NothingEquiped)return 8;
-		return 8;
+		if(items[item] instanceof RandomDrop)return 8;
+		if(items[item] instanceof NothingEquiped)return 9;
+		return 9;
 	}
 	public void loadItem(int item, int id, int count) throws SlickException
 	{
@@ -84,6 +84,10 @@ public class Inventory extends BoardRender
 			items[item] = new StopTime(board);
 		}
 		if(id == 8)
+		{
+			items[item] = new RandomDrop(board);
+		}
+		if(id == 9)
 		{
 			items[item] = new NothingEquiped(board);
 		}
@@ -136,10 +140,11 @@ public class Inventory extends BoardRender
 	{
 		this.items = items;
 	}
+	//returns the inventory to its default starting items
 	public void reset() throws SlickException
 	{
 		items[0] = new VillagerDrop(board);
-		items[0].setCount(10);
+		items[0].setCount(5);
 		items[1] = new NothingEquiped(board);
 		
 		items[2] = new NothingEquiped(board);

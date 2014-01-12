@@ -2,6 +2,7 @@ package game.object;
 
 public class GameInfo
 {
+	//holds game information that gets carried over between levels.
 	protected int level = 1, points = 0, multiplier = 1;
 	public GameInfo()
 	{

@@ -61,7 +61,6 @@ public class CanonPlacer extends Item
 			board.setGrid(grid);
 		}
 	}
-	@Override
 	public void fire(int x, int y, Dir dir) throws SlickException
 	{
 	}

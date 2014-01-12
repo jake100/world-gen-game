@@ -3,9 +3,9 @@ package game.object;
 import game.ChooseFile;
 import game.Game;
 import game.object.component.BoardComponent;
-import game.object.component.BoardGen;
 import game.object.component.GameOver;
 import game.object.component.ParticleGenerator;
+import game.object.component.PlayerInput;
 import game.object.inventory.Inventory;
 import game.util.Circle;
 import game.util.File;
@@ -23,37 +23,43 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 /*
- * Either loads from file or the board gets randomly generated in the constructor.
+ * Class that does most of the work.
+ * Either loads from file or the board gets randomly generated.
  * Loading from a file is way faster.
  * Different tile ids for each grid.
  */
 public class GameBoard extends Board
 {
-	//grid ids 0 = null
 	public static final int air = 0, living = 10, typesOfTile = 19, boss = typesOfTile - 1, meteor = 99;
 	public static final int stone = 0, dirt = 1, grass = 2, charred = 3, barren = 4, mountain = 5, poisoned = 6, typesOfTerrain = 7;
-	public static final int no_foliage = 0, tall_grass = 1, plant = 2, typesOfFoliage = 3;
+	public static final int no_foliage = 0, tall_grass = 1, plant = 2, coverPlant = 3, lifeGiver = 4, typesOfFoliage = 5;
 	public static final int no_placeable = 0, villager = 1, canon = 2, typesOfPlaceable = 3;
 	public static final int no_insect = 0, insect_drop = 1, insect = 2, typesOfInsect = 3;
 	
 	protected int turns = 100, turn = 0, stopTime = 0,counter = 0;
 	protected GameOver gameOver = null;
-	protected BoardGen boardGen;//world generation class
+	protected BoardGenManager boardGenManager;
 	protected ParticleGenerator particleGen = new ParticleGenerator(this);
 	protected boolean playSound = false, godMode = false;
 	protected File file;
 	protected ChooseFile chooseFile = new ChooseFile();
+	private boolean generating = false;
+	private PlayerInput playerInput;
 	public GameBoard(File file, Inventory inventory, GameInfo gameInfo, int enemies, int start, boolean loaded) throws SlickException, InterruptedException
 	{
 		super(gameInfo);
-		boardGen = new BoardGen(this, enemies, start);
+		boardGenManager = new BoardGenManager(this, enemies, start, 1);
 		inventory.setOwner(this);
 		if(loaded)inventory.reset();
 		this.file = file;
 		this.file.setOwner(this);
 		this.loaded = loaded;
 		turns = (int) (18 + enemies * 2 + start * 2);
-		dollars = 100;
+		dollars = 250;
+		if(loaded)
+		{
+			generating = true;
+		}
 		if(!loaded)
 		{
 			loaded = true;
@@ -61,58 +67,77 @@ public class GameBoard extends Board
 			if (val == JFileChooser.APPROVE_OPTION)
 			{
 				   java.io.File otherFile = chooseFile.getSelectedFile();
-				   file.load(otherFile.toString());
-				   int[] values = file.getValues();
-		    		dollars = values[0];
-		    		turn = values[1];
-		    		turns = values[2];
-		    		stopTime = values[3];
-					inventory.loadItem(0, values[4], values[5]);
-		    		inventory.loadItem(1, values[6], values[7]);
-		    		gameInfo.setLevel(values[8]);
-		    		gameInfo.setPoints(values[9]);
-		    		grid = file.getGrid();
-		    		terrainGrid = file.getTerrainGrid();
-		    		foliageGrid = file.getFoliageGrid();
-		    		insectGrid = file.getInsectGrid();
-		    		placeableGrid = file.getPlaceableGrid();
-		    		burnGrid = file.getBurnGrid();
+				   loadGame(otherFile, inventory);
 			}
 			else
 			{
-					java.io.File otherFile = new java.io.File("res/save/demo level.dat");
-				    file.load(otherFile.toString());
-				    int[] values = file.getValues();
-		    		dollars = values[0];
-		    		turn = values[1];
-		    		turns = values[2];
-		    		stopTime = values[3];
-					inventory.loadItem(0, values[4], values[5]);
-		    		inventory.loadItem(1, values[6], values[7]);
-		    		gameInfo.setLevel(values[8]);
-		    		gameInfo.setPoints(values[9]);
-		    		grid = file.getGrid();
-		    		terrainGrid = file.getTerrainGrid();
-		    		foliageGrid = file.getFoliageGrid();
-		    		insectGrid = file.getInsectGrid();
-		    		placeableGrid = file.getPlaceableGrid();
-		    		burnGrid = file.getBurnGrid();
+					java.io.File otherFile = new java.io.File("res/save/tutorial level.dat");
+				    loadGame(otherFile, inventory);
 			}
 		}
-		playSound = true;
-		if(godMode)godUpdate();
+	}
+	public void loadGame(java.io.File otherFile, Inventory inventory) throws SlickException
+	{
+		file.load(otherFile.toString());
+	    int[] values = file.getValues();
+		dollars = values[0];
+		turn = values[1];
+		turns = values[2];
+		stopTime = values[3];
+		inventory.loadItem(0, values[4], values[5]);
+		inventory.loadItem(1, values[6], values[7]);
+		gameInfo.setLevel(values[8]);
+		gameInfo.setPoints(values[9]);
+		grid = file.getGrid();
+		terrainGrid = file.getTerrainGrid();
+		foliageGrid = file.getFoliageGrid();
+		insectGrid = file.getInsectGrid();
+		placeableGrid = file.getPlaceableGrid();
+		burnGrid = file.getBurnGrid();
 	}
     public void update(GameContainer gc, StateBasedGame sbg, World world, int delta) throws SlickException
     {
-    	super.update(gc, sbg, world, delta);
-    	if(gameOver == null)
+    	if(!generating)
     	{
-    		addBoardComponent(particleGen);
-    		for(BoardComponent comp : boardComponents)
-    		{
-    			if(comp instanceof GameOver)gameOver = (GameOver) comp;
-    		}
+			super.update(gc, sbg, world, delta);
+			if(gameOver == null)
+	    	{
+	    		addBoardComponent(particleGen);
+	    		for(BoardComponent comp : boardComponents)
+	    		{
+	    			if(comp instanceof GameOver)gameOver = (GameOver) comp;
+	    		}
+	    	}
+			if(playerInput != null && playerInput.isrKey())
+			{
+				alive = false;
+			}
+
     	}
+		else
+		{
+			boardGenManager.generate();
+			if(boardGenManager.isGenerated())
+			{
+				generating = false;
+				if(gameOver == null)
+		    	{
+		    		addBoardComponent(particleGen);
+		    		for(BoardComponent comp : boardComponents)
+		    		{
+		    			if(comp instanceof GameOver)gameOver = (GameOver) comp;
+		    		}
+		    	}
+				gameOver.setEnabled(false);
+				for(BoardComponent comp : boardComponents)
+				{
+					if(comp instanceof PlayerInput)
+					{
+						this.playerInput = (PlayerInput) comp;
+					}
+				}
+			}
+		}
     }
     public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException
 	{
@@ -181,6 +206,14 @@ public class GameBoard extends Board
     				{
     					spreadFoliage(i, j);
     				}
+    				if(foliageGrid[i][j] == lifeGiver)
+    				{
+    					if(grid[i][j] < living && grid[i][j] != air)
+    					{
+    						int level = grid[i][j] + 1;
+    						grid[i][j] = level;
+    					}
+    				}
     			}
     		}
         	for(BoardComponent comp : boardComponents)
@@ -203,8 +236,13 @@ public class GameBoard extends Board
     public void shellArea(int x, int y, int radius) throws SlickException
     {
     	Circle circle = new Circle();
-    	int radius0 = rnd.nextInt(radius - 1) + 1;
-    	Vector2f pos = circle.getCircle(x, y, radius0).get(rnd.nextInt(circle.getCircle(x, y, radius0).size() - 1));
+    	int radius0 = 1;
+    	Vector2f pos = new Vector2f(x, y);
+    	if(radius > 1)
+    	{
+    		radius0 = rnd.nextInt(radius - 1) + 1;
+    		pos = circle.getCircle(x, y, radius0).get(rnd.nextInt(circle.getCircle(x, y, radius0).size() - 1));
+    	}
     	int xx = (int) pos.x;
 		int yy = (int) pos.y;
 		if(placeableGrid[xx][yy] == no_placeable && grid[xx][yy] != meteor)
@@ -474,8 +512,13 @@ public class GameBoard extends Board
 	{
 		this.file = file;
 	}
-	public int getBoardGenCounter()
+	public boolean isGenerating()
 	{
-		return boardGen.getCounter();
+		return generating;
 	}
+	public void setGenerating(boolean generating)
+	{
+		this.generating = generating;
+	}
+	
 }

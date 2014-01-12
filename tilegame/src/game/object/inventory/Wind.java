@@ -25,43 +25,22 @@ public class Wind extends Item
 
 	public void fire(int x, int y) throws SlickException
 	{
-		
-	}
-
-	public void fire(int x, int y, Dir dir) throws SlickException
-	{
-		deleteBlock(x, y, dir);
-	}
-	public void deleteBlock(int x, int y, Dir dir)
-	{
-		  if(dir == Dir.Down)
-		  {
 			  for(int i = y; i >= 0; i--)
 			  {
 				  if(grid[x][i] != GameBoard.air) {dropBlock(x, i, Dir.Down);}
 			  }
-		  }
-		  if(dir == Dir.Up)
-		  {
 			  for(int i = y; i < Game.THeight; i++)
 			  {
 				  if(grid[x][i] != GameBoard.air){dropBlock(x, i, Dir.Up);}
 			  }
-		  }
-		  if(dir == Dir.Right)
-		  {
 			  for(int i = x; i >= 0; i--)
 			  {
 				  if(grid[i][y] != GameBoard.air){dropBlock(i, y, Dir.Right);}
 			  }
-		  }
-		  if(dir == Dir.Left)
-		  {
 			  for(int i = x; i < Game.TWidth; i++)
 			  {
 				  if(grid[i][y] != GameBoard.air){dropBlock(i, y, Dir.Left);}
 			  }
-		  }
 		  board.setGrid(grid);
 	}
 	public void dropBlock(int x, int y, Dir dir)
@@ -110,6 +89,15 @@ public class Wind extends Item
 				}
 			}
 		}
+	}
+
+	public void fire(int x, int y, Dir dir) throws SlickException
+	{
+		deleteBlock(x, y, dir);
+	}
+	public void deleteBlock(int x, int y, Dir dir)
+	{
+		 
 	}
 	public int replace(int x, int y)
 	{

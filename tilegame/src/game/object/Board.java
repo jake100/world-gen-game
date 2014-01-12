@@ -13,6 +13,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 /*
+ * abstract class extended by the GameBoard class.
  * Initializes the differed grids, has a Random variable and other fields used by GameBoard.
  * Provides getters and setters for the different fields as well as a basic update and render method for use by GameBoard.
  */
@@ -36,8 +37,7 @@ public abstract class Board extends GameObject
     public void update(GameContainer gc, StateBasedGame sbg, World world, int delta) throws SlickException
     {
     	super.update(gc, sbg, world, delta);
-
-    	for(BoardComponent boardComponent : boardComponents)
+		for(BoardComponent boardComponent : boardComponents)
         {
         	boardComponent.update(gc, sbg, world, delta);
         }

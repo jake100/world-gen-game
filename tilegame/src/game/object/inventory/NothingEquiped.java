@@ -14,21 +14,17 @@ public class NothingEquiped extends Item
 	{
 		super(board, "res/nothing.png", 0);
 	}
-
-	@Override
-	public void update(GameContainer gc, StateBasedGame sbg, World world,
-			int delta) throws SlickException
+	public void update(GameContainer gc, StateBasedGame sbg, World world, int delta) throws SlickException
 	{
+		
 	}
-
-	@Override
 	public void fire(int x, int y) throws SlickException
 	{
+		
 	}
-
-	@Override
 	public void fire(int x, int y, Dir dir) throws SlickException
 	{
+		
 	}
 
 }

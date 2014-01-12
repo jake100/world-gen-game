@@ -38,10 +38,12 @@ public class Hud extends BoardRender
 		g.setColor(new Color(0f, 0f, 0f, 1));
 		String str = "";
 		if(board.getStopTime() != 0)str = " Stop Time: " + board.getStopTime();
-		String msg = "$" + board.getDollars() + " Turns: " + board.getTurn() + "/" + board.getTurns() + " Level: " + gameInfo.getLevel() + str;
-		g.setFont(Game.gameFont);
+		g.setFont(Game.smallPrint);
 		g.setColor(Color.black);
-		g.drawString(msg, 5, Game.Height - Game.ScaledTileSize * 4 + 5);
+		g.drawString("$" + board.getDollars(), Game.ScaledTileSize * 31, Game.Height - Game.ScaledTileSize * 4 + 5);
+		g.drawString("Turns: " + board.getTurn() + "/" + board.getTurns(), Game.ScaledTileSize * 31, Game.Height - Game.ScaledTileSize * 4 + 20);
+		g.drawString("Level: " + gameInfo.getLevel(), Game.ScaledTileSize * 31, Game.Height - Game.ScaledTileSize * 4 + 35);
+		g.drawString(str, Game.ScaledTileSize * 31, Game.Height - Game.ScaledTileSize * 4 + 35);
 	}
 
 	public void update(GameContainer gc, StateBasedGame sbg, World world, int delta) throws SlickException

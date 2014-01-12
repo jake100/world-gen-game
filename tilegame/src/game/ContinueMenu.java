@@ -6,7 +6,9 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
-
+/*
+ * menu that come on screen when a level ends.
+ */
 public class ContinueMenu extends Button
 {
 	private Image buttonImage = null;

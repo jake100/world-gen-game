@@ -11,6 +11,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -44,18 +45,19 @@ public class PauseMenu extends Button
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException
 	{
 		super.update(gc, sbg, delta);
+		Input input =  gc.getInput();
 		resumeButton.update(gc, sbg, delta);
 		saveButton.update(gc, sbg, delta);
 		quitButton.update(gc, sbg, delta);
 		int wait = 20;
 		count = 0;
-		if(playerInput != null && !visible && menuCount <= 0 && escapedClicked)
+		if(playerInput != null && !visible && menuCount <= 0 && getInput(input, Input.KEY_ESCAPE))
 		{
 			visible = true;
 			playerInput.setEnabled(false);
 			menuCount = wait;
 		}
-		else if(visible && menuCount <= 0 && escapedClicked)
+		else if(visible && menuCount <= 0 && getInput(input, Input.KEY_ESCAPE))
 		{
 			visible = false;
 			playerInput.setEnabled(true);

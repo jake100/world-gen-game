@@ -11,6 +11,7 @@ import java.util.Random;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -36,14 +37,15 @@ public class GameOver extends BoardRender
 
 	public void update(GameContainer gc, StateBasedGame sbg, World world, int delta) throws SlickException
 	{
+		Input input = gc.getInput();
 		if(over && enabled)
 		{
 			if(continueMenu == null)
 			{
 				String[] str = new String[4];
 				str[0] = "Game over. Space to continue... ";
-				str[1] = "Level: " +gameInfo.getLevel() + " ";
-				str[2] = "Points: " +gameInfo.getPoints() + " ";
+				str[1] = "Level: " + gameInfo.getLevel() + " ";
+				str[2] = "Points: " + gameInfo.getPoints() + " ";
 				str[3] = "$" + board.getDollars();
 				continueMenu = new ContinueMenu(str);
 			}
@@ -59,7 +61,7 @@ public class GameOver extends BoardRender
 			counter++;
 			if(counter % 2 == 0)board.tileUpdate();
 			continueMenu.update(gc, sbg, delta);
-			if(continueMenu.isSpaceClicked())
+			if(continueMenu.getInput(input, Input.KEY_SPACE));
 			{
 				SoundBank.endSound.stop();
 				board.setAlive(false);
@@ -77,11 +79,11 @@ public class GameOver extends BoardRender
 		over = true;
 		if(type == Type.Kill_All)
 		{
-			//img = new Image("res/kill_all.png");
+			System.out.println("kill all");
 		}
 		if(type == Type.Time_Up)
 		{
-			//img = new Image("res/time_up.png");
+			System.out.println("time up");
 		}
 	}
 
@@ -115,7 +117,6 @@ public class GameOver extends BoardRender
         	{
         		gameInfo.addPoints(5000);
         		start(Type.Kill_All);
-        		over = true;
         	}
     	}
 	}

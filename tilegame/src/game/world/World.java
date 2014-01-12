@@ -56,8 +56,6 @@ public class World
 		Hud hud = new Hud(gameBoard, gameInfo);
 		TileRender tileRender = new TileRender(gameBoard, playerInput);
 		
-
-		
 		gameBoard.addBoardComponent(playerInput);
 		gameBoard.addBoardComponent(tileRender);
 		gameBoard.addBoardComponent(gameOver);
@@ -135,9 +133,5 @@ public class World
 	public void setAlive(boolean alive)
 	{
 		this.alive = alive;
-	}
-	public int getBoardGenCounter()
-	{
-		return board.getBoardGenCounter();
 	}
 }

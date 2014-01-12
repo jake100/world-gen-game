@@ -14,7 +14,7 @@ import org.newdawn.slick.state.StateBasedGame;
 public class MenuState extends BasicGameState
 {
 	public static boolean load = false;
-	private MenuButton playButton, loadButton, quitButton;
+	private MenuButton playButton, loadButton, settingsButton, quitButton;
 	private GameImage gameimg;
 	private Image img;
 	public MenuState(int id)
@@ -23,9 +23,10 @@ public class MenuState extends BasicGameState
 	}
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException 
 	{
-		playButton = new MenuButton("New Game", 50);
-		loadButton = new MenuButton("Load Game", 150);
-		quitButton = new MenuButton("Quit Game", 250);
+		playButton = new MenuButton("New Game", 20);
+		loadButton = new MenuButton("Load Game", 90);
+		settingsButton = new MenuButton("Settings", 160);
+		quitButton = new MenuButton("Quit Game", 230);
 		gameimg = new GameImage();
 		img = gameimg.getImage("res/18_tile.png").getScaledCopy(Game.Scale * 5);
 	}
@@ -34,16 +35,15 @@ public class MenuState extends BasicGameState
 	{
 		playButton.update(gc, sbg, delta);
 		loadButton.update(gc, sbg, delta);
+		settingsButton.update(gc, sbg, delta);
 		quitButton.update(gc, sbg, delta);
 		if(playButton.isClicked()) 
 		{
-			playButton.setClicked(false);
 			load = false;
 			sbg.enterState(2);
 		}
 		if(loadButton.isClicked())
 		{
-			loadButton.setClicked(false);
 			load = true;
 			sbg.enterState(2);
 		}
@@ -53,6 +53,7 @@ public class MenuState extends BasicGameState
 	{
 		playButton.render(gc, sbg, g);
 		loadButton.render(gc, sbg, g);
+		settingsButton.render(gc, sbg, g);
 		quitButton.render(gc, sbg, g);
 		img.draw(Game.Width / 2 - Game.ScaledTileSize * 5 / 2, Game.Height / 2 + Game.gameFont.getHeight() * 6f + Game.ScaledTileSize / 2);
 		g.setFont(Game.gameFont);
