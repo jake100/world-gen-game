@@ -6,7 +6,11 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
-
+/**
+ * 
+ * buttons used to buy things from the shop, gets 2 types of images from the item being sold, also displays the cost of the item being sold.
+ *
+ */
 public class ShopButton extends Button
 {
 	private Image buttonImage = null;

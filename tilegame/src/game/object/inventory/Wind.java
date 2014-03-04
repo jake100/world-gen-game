@@ -12,9 +12,9 @@ import org.newdawn.slick.state.StateBasedGame;
 public class Wind extends Item
 {
 	int[][] grid;
-	public Wind(GameBoard board, int count) throws SlickException
+	public Wind(GameBoard board) throws SlickException
 	{
-		super(board, "res/wind.png", count);
+		super(board, "res/wind.png", 1);
 		grid = board.getGrid();
 	}
 
@@ -25,86 +25,52 @@ public class Wind extends Item
 
 	public void fire(int x, int y) throws SlickException
 	{
-			  for(int i = y; i >= 0; i--)
-			  {
-				  if(grid[x][i] != GameBoard.air) {dropBlock(x, i, Dir.Down);}
-			  }
-			  for(int i = y; i < Game.THeight; i++)
-			  {
-				  if(grid[x][i] != GameBoard.air){dropBlock(x, i, Dir.Up);}
-			  }
-			  for(int i = x; i >= 0; i--)
-			  {
-				  if(grid[i][y] != GameBoard.air){dropBlock(i, y, Dir.Right);}
-			  }
-			  for(int i = x; i < Game.TWidth; i++)
-			  {
-				  if(grid[i][y] != GameBoard.air){dropBlock(i, y, Dir.Left);}
-			  }
-		  board.setGrid(grid);
+		int range = 5;
+		dropBlock(0, x, y, Dir.Down, range);
+		dropBlock(0, x, y, Dir.Up, range);
+		dropBlock(0, x, y, Dir.Right, range);
+		dropBlock(0, x, y, Dir.Left, range);
+		board.setGrid(grid);
 	}
-	public void dropBlock(int x, int y, Dir dir)
+	public void dropBlock(int id, int x, int y, Dir dir, int count) throws SlickException
 	{
-		if(dir == Dir.Down)
+		int destX = x, destY = y;
+		boolean canMove = false;
+		switch(dir)
 		{
-			if(y + 1 < Game.THeight)
-			{
-				if(grid[x][y + 1] == GameBoard.air)
-				{
-					grid[x][y + 1] = replace(x, y);
-					dropBlock(x, y + 1, dir);
-				}
-			}
+		case Down:
+			destY++;
+			if(destY < Game.THeight)canMove = true;
+			break;
+		case Up:
+			destY--;
+			if(destY >= 0)canMove = true;
+			break;
+		case Right:
+			destX++;
+			if(destX < Game.TWidth)canMove = true;
+			break;
+		case Left:
+			destX--;
+			if(destX >= 0)canMove = true;
+			break;
 		}
-		if(dir == Dir.Up)
+		if(canMove)
 		{
-			if(y - 1 >= 0)
+			//board.damage(x, y, 1);
+
+			if(count > 0)
 			{
-				if(grid[x][y - 1] == GameBoard.air)
-				{
-					grid[x][y - 1] = replace(x, y);
-					dropBlock(x, y - 1, dir);
-				}
-			}
-		}
-		if(dir == Dir.Right)
-		{
-			if(x + 1 < Game.TWidth)
-			{
-				if(grid[x + 1][y] == GameBoard.air)
-				{
-					grid[x + 1][y] = replace(x, y);
-					dropBlock(x + 1, y, dir);
-				}
-			}
-		}
-		if(dir == Dir.Left)
-		{
-			if(x - 1 >= 0)
-			{
-				if(grid[x - 1][y] == GameBoard.air)
-				{
-					grid[x - 1][y] = replace(x, y);
-					dropBlock(x - 1, y, dir);
-				}
+				int block = grid[x][y];
+				grid[x][y] = id;
+				board.spawnCload(x, y, 1);
+				count--;
+				dropBlock(block, destX, destY, dir, count);
 			}
 		}
 	}
 
 	public void fire(int x, int y, Dir dir) throws SlickException
 	{
-		deleteBlock(x, y, dir);
-	}
-	public void deleteBlock(int x, int y, Dir dir)
-	{
-		 
-	}
-	public int replace(int x, int y)
-	{
-		board.damage(x, y, 1);
-		int block = grid[x][y];
-		if(block < 0)block = 0;
-		grid[x][y] = GameBoard.air;
-		return block;
 	}
 }

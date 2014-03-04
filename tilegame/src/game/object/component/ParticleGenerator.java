@@ -1,7 +1,7 @@
 package game.object.component;
 
 import game.object.GameBoard;
-import game.object.Particle;
+import game.object.Basic_Particle;
 import game.world.World;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import org.newdawn.slick.state.StateBasedGame;
  */
 public class ParticleGenerator extends BoardRender
 {
-	protected ArrayList<Particle> particles = new ArrayList<Particle>();
+	protected ArrayList<Basic_Particle> particles = new ArrayList<Basic_Particle>();
 	protected boolean isParticleGen = true;
 	protected int maxParticles = 2000;
 	public ParticleGenerator(GameBoard board)
@@ -45,7 +45,7 @@ public class ParticleGenerator extends BoardRender
             }
     	}
 	}
-	public void addParticle(Particle particle)
+	public void addParticle(Basic_Particle particle)
 	{
 		if(isParticleGen)
 		{

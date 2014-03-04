@@ -53,48 +53,12 @@ public class File extends BoardComponent
             values[8] = Integer.parseInt(in.readLine());
             values[9] = Integer.parseInt(in.readLine());
             
-            for(int x = 0; x < Game.TWidth;x++)
-            {
-                for(int y = 0; y < Game.THeight;y++)
-                {
-                	grid[x][y] = Integer.parseInt(in.readLine());
-                }
-            }
-            for(int x = 0; x < Game.TWidth;x++)
-            {
-                for(int y = 0; y < Game.THeight;y++)
-                {
-                	terrainGrid[x][y] = Integer.parseInt(in.readLine());
-                }
-            }
-            for(int x = 0; x < Game.TWidth;x++)
-            {
-                for(int y = 0; y < Game.THeight;y++)
-                {
-                	foliageGrid[x][y] = Integer.parseInt(in.readLine());
-                }
-            }
-            for(int x = 0; x < Game.TWidth;x++)
-            {
-                for(int y = 0; y < Game.THeight;y++)
-                {
-                	burnGrid[x][y] = Integer.parseInt(in.readLine());
-                }
-            }
-            for(int x = 0; x < Game.TWidth;x++)
-            {
-                for(int y = 0; y < Game.THeight;y++)
-                {
-                	insectGrid[x][y] = Integer.parseInt(in.readLine());
-                }
-            }
-            for(int x = 0; x < Game.TWidth;x++)
-            {
-                for(int y = 0; y < Game.THeight;y++)
-                {
-                	placeableGrid[x][y] = Integer.parseInt(in.readLine());
-                }
-            }
+            grid = readGrid();
+            terrainGrid = readGrid();
+            foliageGrid = readGrid();
+            burnGrid = readGrid();
+            insectGrid = readGrid();
+            placeableGrid = readGrid();
             in.close();
         }
         catch(IOException e)
@@ -108,86 +72,28 @@ public class File extends BoardComponent
 	        {
 	            out = new BufferedWriter(new FileWriter(path));
 	            
-	            out.write(board.getDollars()+"");
-	            out.newLine();
-	            out.write(board.getTurn()+"");
-	            out.newLine();
-	            out.write(board.getTurns()+"");
-	            out.newLine();
-	            out.write(board.getStopTime()+"");
-	            out.newLine();
+	            writeNum(board.getDollars());
+	            writeNum(board.getTurn());
+	            writeNum(board.getTurns());
+	            writeNum(board.getStopTime());
 	            int[] firstItem = new int[2], secondItem = new int[2];
 	            firstItem = inventory.saveItem(0);
 	            secondItem = inventory.saveItem(1);
-	            out.write(firstItem[0]+"");
-	            out.newLine();
-	            out.write(firstItem[1]+"");
-	            out.newLine();
-	            out.write(secondItem[0]+"");
-	            out.newLine();
-	            out.write(secondItem[1]+"");
-	            out.newLine();
+	            writeNum(firstItem[0]);
+	            writeNum(firstItem[1]);
+	            writeNum(secondItem[0]);
+	            writeNum(secondItem[1]);
 	            
-	            out.write(gameInfo.getLevel()+"");
-	            out.newLine();
+	            writeNum(gameInfo.getLevel());
 	            
-	            out.write(gameInfo.getPoints()+"");
-	            out.newLine();
+	            writeNum(gameInfo.getPoints());
 	            
-	            for(int x = 0; x < Game.TWidth;x++)
-	            {
-	                for(int y = 0; y < Game.THeight;y++)
-	                {
-	                	int[][] grid = board.getGrid();
-	                	out.write(grid[x][y]+"");
-	     	            out.newLine();
-	                }
-	            }
-	            for(int x = 0; x < Game.TWidth;x++)
-	            {
-	                for(int y = 0; y < Game.THeight;y++)
-	                {
-	                	int[][] grid = board.getTerrainGrid();
-	                	out.write(grid[x][y]+"");
-	     	            out.newLine();
-	                }
-	            }
-	            for(int x = 0; x < Game.TWidth;x++)
-	            {
-	                for(int y = 0; y < Game.THeight;y++)
-	                {
-	                	int[][] grid = board.getFoliageGrid();
-	                	out.write(grid[x][y]+"");
-	     	            out.newLine();
-	                }
-	            }
-	            for(int x = 0; x < Game.TWidth;x++)
-	            {
-	                for(int y = 0; y < Game.THeight;y++)
-	                {
-	                	int[][] grid = board.getBurnGrid();
-	                	out.write(grid[x][y]+"");
-	     	            out.newLine();
-	                }
-	            }
-	            for(int x = 0; x < Game.TWidth;x++)
-	            {
-	                for(int y = 0; y < Game.THeight;y++)
-	                {
-	                	int[][] grid = board.getInsectGrid();
-	                	out.write(grid[x][y]+"");
-	     	            out.newLine();
-	                }
-	            }
-	            for(int x = 0; x < Game.TWidth;x++)
-	            {
-	                for(int y = 0; y < Game.THeight;y++)
-	                {
-	                	int[][] grid = board.getPlaceableGrid();
-	                	out.write(grid[x][y]+"");
-	     	            out.newLine();
-	                }
-	            }
+	            writeGrid(board.getGrid());
+	            writeGrid(board.getTerrainGrid());
+	            writeGrid(board.getFoliageGrid());
+	            writeGrid(board.getBurnGrid());
+	            writeGrid(board.getInsectGrid());
+	            writeGrid(board.getPlaceableGrid());
 	            System.out.println("saved...");
 	            out.close();
 	        }
@@ -195,6 +101,33 @@ public class File extends BoardComponent
 	        {
 	            System.out.println("There was a promlem loading the file " + e);
 	        }
+	}
+	public int[][] readGrid() throws NumberFormatException, IOException
+	{
+		int[][] grid = new int[Game.TWidth][Game.THeight];
+        for(int x = 0; x < Game.TWidth;x++)
+        {
+            for(int y = 0; y < Game.THeight;y++)
+            {
+            	grid[x][y] = Integer.parseInt(in.readLine());
+            }
+        }
+        return grid;
+	}
+	public void writeGrid(int[][] grid) throws IOException
+	{
+        for(int x = 0; x < Game.TWidth;x++)
+        {
+            for(int y = 0; y < Game.THeight;y++)
+            {
+            	writeNum(grid[x][y]);
+            }
+        }
+	}
+	public void writeNum(int num) throws IOException
+	{
+		out.write(num+"");
+        out.newLine();
 	}
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, World world,

@@ -16,6 +16,7 @@ import game.object.inventory.RockDrop;
 import game.object.inventory.ShopItem;
 import game.object.inventory.StopTime;
 import game.object.inventory.VillagerDrop;
+import game.object.inventory.Wind;
 import game.util.GameImage;
 import game.world.World;
 
@@ -45,18 +46,19 @@ public class Shop extends BoardRender
 		rightTile = new GameImage().getImage("res/right_tile.png").getScaledCopy(Game.Scale);
 		iconBack = new GameImage().getImage("res/icon_back.png").getScaledCopy(Game.Scale * 2);
 		this.inventory = inventory;
-		shopItems = new ShopItem[10];
-		int randomDropCost = 1000, stopTimeCost = 1000, fireStormCost = 300, poisonCost = 100, fireCost = 100, laserCost = 50, villagerCost = 50, stoneCost = 25, insectCost = 25, canonCost = 25;
+		shopItems = new ShopItem[11];
+		int randomDropCost = 1000, stopTimeCost = 1000, fireStormCost = 300, poisonCost = 100, fireCost = 100, laserCost = 50, windCost = 50, villagerCost = 50, stoneCost = 25, insectCost = 25, canonCost = 25;
 		shopItems[0] = new ShopItem(insectCost, board, inventory, new ShopButton(insectCost, saleItemX, saleItemY, "res/insect_icon.png", "res/lit_insect_icon.png"), new InsectDrop(board));
 		shopItems[1] = new ShopItem(stoneCost, board, inventory, new ShopButton(stoneCost, saleItemX + Game.ScaledTileSize * 3 * 1, saleItemY, "res/obsidian_tile.png", "res/lit_obsidian_tile.png"), new RockDrop(board));
 		shopItems[2] = new ShopItem(canonCost, board, inventory, new ShopButton(canonCost, saleItemX + Game.ScaledTileSize * 3 * 2, saleItemY, "res/canon_icon.png", "res/lit_canon_icon.png"), new CanonPlacer(board));
 		shopItems[3] = new ShopItem(villagerCost, board, inventory, new ShopButton(villagerCost, saleItemX + Game.ScaledTileSize * 3 * 3, saleItemY, "res/villager_icon.png", "res/lit_villager_icon.png"), new VillagerDrop(board));
-		shopItems[4] = new ShopItem(laserCost, board, inventory, new ShopButton(laserCost, saleItemX + Game.ScaledTileSize * 3 * 4, saleItemY, "res/laser_icon.png", "res/lit_laser_icon.png"), new Laser(board));
-		shopItems[5] = new ShopItem(fireCost, board, inventory, new ShopButton(fireCost, saleItemX + Game.ScaledTileSize * 3 * 5, saleItemY, "res/bomb_icon.png", "res/lit_bomb_icon.png"), new FireBomb(board));
-		shopItems[6] = new ShopItem(poisonCost, board, inventory, new ShopButton(poisonCost, saleItemX + Game.ScaledTileSize * 3 * 6, saleItemY, "res/poison_icon.png", "res/lit_poison_icon.png"), new PoisonBomb(board));
-		shopItems[7] = new ShopItem(fireStormCost, board, inventory, new ShopButton(fireStormCost, saleItemX + Game.ScaledTileSize * 3 * 7, saleItemY, "res/fire_storm_icon.png", "res/lit_fire_storm_icon.png"), new FireStorm(board));
-		shopItems[8] = new ShopItem(stopTimeCost, board, inventory, new ShopButton(stopTimeCost, saleItemX + Game.ScaledTileSize * 3 * 8, saleItemY, "res/stop_time_icon.png", "res/lit_stop_time_icon.png"), new StopTime(board));
-		shopItems[9] = new ShopItem(randomDropCost, board, inventory, new ShopButton(randomDropCost, saleItemX + Game.ScaledTileSize * 3 * 9, saleItemY, "res/random_drop.png", "res/lit_stop_time_icon.png"), new RandomDrop(board));
+		shopItems[4] = new ShopItem(windCost, board, inventory, new ShopButton(windCost, saleItemX + Game.ScaledTileSize * 3 * 4, saleItemY, "res/wind.png", "res/lit_wind.png"), new Wind(board));
+		shopItems[5] = new ShopItem(laserCost, board, inventory, new ShopButton(laserCost, saleItemX + Game.ScaledTileSize * 3 * 5, saleItemY, "res/laser_icon.png", "res/lit_laser_icon.png"), new Laser(board));
+		shopItems[6] = new ShopItem(fireCost, board, inventory, new ShopButton(fireCost, saleItemX + Game.ScaledTileSize * 3 * 6, saleItemY, "res/bomb_icon.png", "res/lit_bomb_icon.png"), new FireBomb(board));
+		shopItems[7] = new ShopItem(poisonCost, board, inventory, new ShopButton(poisonCost, saleItemX + Game.ScaledTileSize * 3 * 7, saleItemY, "res/poison_icon.png", "res/lit_poison_icon.png"), new PoisonBomb(board));
+		shopItems[8] = new ShopItem(fireStormCost, board, inventory, new ShopButton(fireStormCost, saleItemX + Game.ScaledTileSize * 3 * 8, saleItemY, "res/fire_storm_icon.png", "res/lit_fire_storm_icon.png"), new FireStorm(board));
+		shopItems[9] = new ShopItem(stopTimeCost, board, inventory, new ShopButton(stopTimeCost, saleItemX + Game.ScaledTileSize * 3 * 9, saleItemY, "res/stop_time_icon.png", "res/lit_stop_time_icon.png"), new StopTime(board));
+		shopItems[10] = new ShopItem(randomDropCost, board, inventory, new ShopButton(randomDropCost, saleItemX + Game.ScaledTileSize * 3 * 10, saleItemY, "res/random_drop.png", "res/lit_stop_time_icon.png"), new RandomDrop(board));
 	}
 	public void update(GameContainer gc, StateBasedGame sbg, World world, int delta) throws SlickException
 	{

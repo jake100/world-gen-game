@@ -13,7 +13,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 /*
- * Just renders information taken from gameInfo and the game board using the game font.
+ * Renders information taken from gameInfo and the game board on three types of tiles, uses the game font defined in the game class.
  */
 public class Hud extends BoardRender
 {

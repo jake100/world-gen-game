@@ -7,9 +7,11 @@ import game.object.inventory.FireStorm;
 import game.object.inventory.InsectDrop;
 import game.object.inventory.PoisonBomb;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
 /*
  * Class that handles world generation.
  * it starts as all stone then it adds mountains and dirt.
@@ -55,9 +57,9 @@ public class BoardGen
 		board.setGrid(grid);
 		board.setTerrainGrid(terrainGrid);
 		board.getParticleGen().setParticleGen(true);
-		for(int i = 0;i < 350;i++)
+		for(int i = 0;i < 400;i++)
 		{
-			board.spawnCload(rnd.nextInt(Game.TWidth), rnd.nextInt(Game.THeight), rnd.nextInt(3) + 1);
+			board.spawnCload(Game.rndX(), Game.rndY(), rnd.nextInt(3) + 1);
 		}
 	}
 	public void clearBurnGrid()
@@ -74,13 +76,13 @@ public class BoardGen
 	{
 		for(int i = 0; i < count;i++)
 		{
-			fireBomb.fire(rnd.nextInt(Game.TWidth), rnd.nextInt(Game.THeight));
-			poisonBomb.fire(rnd.nextInt(Game.TWidth), rnd.nextInt(Game.THeight));
-			fireStorm.fire(rnd.nextInt(Game.TWidth), rnd.nextInt(Game.THeight));
+			fireBomb.fire(Game.rndX(), Game.rndY());
+			poisonBomb.fire(Game.rndX(), Game.rndY());
+			fireStorm.fire(Game.rndX(), Game.rndY());
 		}
 
 	}
-	//removes certain tiles that are just by themselves and not touching the edge.
+	//removes certain tiles that are just by themselves and are not touching the edge.
 	public void removeSingleTiles()
 	{
 		for(int x = 0; x < Game.TWidth;x++)
@@ -101,6 +103,7 @@ public class BoardGen
 	public boolean isAlone(int x, int y, int id, int altId)
 	{
 		if(x - 1 < 0 || x + 1 >= Game.TWidth || y - 1 < 0 || y + 1 >= Game.THeight)return false;
+		
 		if(terrainGrid[x + 1][y] == id || terrainGrid[x + 1][y] == altId)return false;
 		if(terrainGrid[x - 1][y] == id || terrainGrid[x - 1][y] == altId)return false;
 		
@@ -109,7 +112,6 @@ public class BoardGen
 		
 		if(terrainGrid[x + 1][y + 1] == id || terrainGrid[x + 1][y + 1] == altId)return false;
 		if(terrainGrid[x + 1][y - 1] == id || terrainGrid[x + 1][y - 1] == altId)return false;
-		
 		if(terrainGrid[x - 1][y + 1] == id || terrainGrid[x - 1][y + 1] == altId)return false;
 		if(terrainGrid[x - 1][y - 1] == id || terrainGrid[x - 1][y - 1] == altId)return false;
 		return true;
@@ -125,97 +127,104 @@ public class BoardGen
 			}
 		}
 	}
-	public void addEnemy()
+	public void addEnemy(ArrayList<Vector2f> list)
 	{
-		rndTile();
+		list = rndTile(list);
 		if(grid[x][y] == GameBoard.air)grid[x][y] = GameBoard.boss;
-		else addEnemy();
+		else addEnemy(list);
 	}
-	public void addEnemies(int count)
+	public void addEnemies(int count, ArrayList<Vector2f> list)
 	{
 		for(int i = 0;i < count;i++)
 		{
-			addEnemy();
+			addEnemy(list);
 		}
 	}
-	public void addId(int id)
+	public void addId(int id, ArrayList<Vector2f> list)
 	{
-		rndTile();
+		list = rndTile(list);
 		switch(id)
 		{
 		case GameBoard.mountain:
 			if(terrainGrid[x][y] == GameBoard.stone)terrainGrid[x][y] = GameBoard.mountain;
-			else addMountain(x, y);
+			else addId(id, x, y, list);
 			break;
 		case GameBoard.dirt:
 			if(terrainGrid[x][y] == GameBoard.stone)terrainGrid[x][y] = GameBoard.dirt;
-			else if(rnd.nextInt(100) < 95)addDirt(x, y);
-			else addId(0);
+			else addId(0, x, y, list);
 			break;
 		}
 	}
-	public void addObsidian()
+	public void addId(int id, int xx, int yy, ArrayList<Vector2f> list)
 	{
-		rndTile();
-		if(grid[x][y] == GameBoard.air)grid[x][y] = GameBoard.meteor;
-		else addObsidian();
+		for(int i = 0;i < list.size() - 1;i++)
+		{
+			if((int)list.get(i).x == xx && (int)list.get(i).y == yy)
+			{
+				switch(id)
+				{
+				case GameBoard.mountain:
+					if(terrainGrid[x][y] == GameBoard.stone)terrainGrid[x][y] = GameBoard.mountain;
+					else addId(id, list);
+					break;
+				case GameBoard.dirt:
+					if(terrainGrid[x][y] == GameBoard.stone)terrainGrid[x][y] = GameBoard.dirt;
+					else addId(0, list);
+					break;
+				}
+				return;
+			}
+		}
 	}
-	public void extendMountains(int count)
+	public void addObsidian(ArrayList<Vector2f> list)
+	{
+		list = rndTile(list);
+		if(grid[x][y] == GameBoard.air)grid[x][y] = GameBoard.meteor;
+		else addObsidian(list);
+	}
+	public void extendMountains(int count, ArrayList<Vector2f> list)
 	{
 		for(int i = 0;i < count;i++)
 		{
-			extendMountain();
+			extendMountain(list);
 		}
 	}
-	public void extendMountain()
+	public void extendMountain(ArrayList<Vector2f> list)
 	{
-		rndTile();
-		if(terrainGrid[x][y] == GameBoard.mountain)addMountain(x, y);
-		else extendMountain();
+		if(list.size() == 0)return;
+		list = rndTile(list);
+		if(terrainGrid[x][y] == GameBoard.mountain)addId(GameBoard.mountain, x, y, list);
+		else extendMountain(list);
 	}
-	public void addGrass()
+	public void addGrass(ArrayList<Vector2f> list)
 	{
-		rndTile();
+		list = rndTile(list);
 		if(terrainGrid[x][y] == GameBoard.dirt)terrainGrid[x][y] = GameBoard.grass;
-		else addGrass();
+		else addGrass(list);
 	}
-	public void addMountain(int x, int y)
+	public void addGrass(int x, int y, ArrayList<Vector2f> list)
 	{
-		int num = rnd.nextInt(4);
-		if(num == 0)x++;
-		if(num == 1)x--;
-		if(num == 2)y++;
-		if(num == 3)y--;
-		if(x < 0 || x >= grid.length || y < 0 || y >= grid[0].length)addId(GameBoard.mountain);
-		else if(terrainGrid[x][y] == GameBoard.stone)terrainGrid[x][y] = GameBoard.mountain;
-		else addId(GameBoard.mountain);
-	}
-	public void addDirt(int x, int y)
-	{
-		int num = rnd.nextInt(4);
-		if(num == 0)x++;
-		if(num == 1)x--;
-		if(num == 2)y++;
-		if(num == 3)y--;
-		if(x < 0 || x >= grid.length || y < 0 || y >= grid[0].length)addId(GameBoard.dirt);
-		else if(terrainGrid[x][y] == GameBoard.stone)terrainGrid[x][y] = GameBoard.dirt;
-		else addId(GameBoard.dirt);
-	}
-	public void addGrass(int x, int y)
-	{
-		int num = rnd.nextInt(4);
-		if(num == 0)x++;
-		if(num == 1)x--;
-		if(num == 2)y++;
-		if(num == 3)y--;
-		if(x < 0 || x >= grid.length || y < 0 || y >= grid[0].length)addGrass();
+		rndShift();
+		if(x < 0 || x >= grid.length || y < 0 || y >= grid[0].length)addGrass(list);
 		else if(terrainGrid[x][y] == GameBoard.dirt)terrainGrid[x][y] = GameBoard.grass;
-		else addGrass();
+		else addGrass(list);
 	}
-	public void rndTile()
+	public void rndShift()
 	{
-		x = rnd.nextInt(grid.length);
-		y = rnd.nextInt(grid[0].length);
+		int num = rnd.nextInt(4);
+		if(num == 0)x++;
+		if(num == 1)x--;
+		if(num == 2)y++;
+		if(num == 3)y--;
+	}
+	public ArrayList<Vector2f> rndTile(ArrayList<Vector2f> list)
+	{
+		int i = list.size() - 1;
+		if(i > 1)i = rnd.nextInt(i);
+		x = (int) list.get(i).x;
+		y = (int) list.get(i).y;
+		list.remove(i);
+		return list;
 	}
 	public int getCounter()
 	{

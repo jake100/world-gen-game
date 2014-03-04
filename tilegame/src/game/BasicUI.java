@@ -19,7 +19,6 @@ public abstract class BasicUI
 			int mx = input.getMouseX();
 			int my = input.getMouseY();
 			if((mx > x && mx < x + width * scale) && (my > y && my < y + height * scale)) entered = true;
-			
 		}
 		else
 		{

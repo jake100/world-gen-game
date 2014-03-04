@@ -7,7 +7,9 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 /*
- * menu that come on screen when a level ends.
+ * menu that is displayed when the level ends.
+ * the gameBoard's turnUpdate method is being called faster than the user can advance turns.
+ * the player has to press space to advance to the next level.
  */
 public class ContinueMenu extends Button
 {

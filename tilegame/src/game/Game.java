@@ -3,6 +3,7 @@ package game;
 
 import java.awt.Font;
 import java.io.InputStream;
+import java.util.Random;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
@@ -14,7 +15,7 @@ import org.newdawn.slick.util.ResourceLoader;
 public class Game extends StateBasedGame 
 {
 	public static final int Scale = 1, TileSize = 15, ScaledTileSize = (int)(TileSize * Scale);
-	public static final int TWidth = 40, THeight = 35;
+	public static final int TWidth = 75, THeight = 55;
 	public static final int Width = ScaledTileSize * TWidth, Height = ScaledTileSize * THeight + ScaledTileSize * 8;
 	public static final int Splash = 0, MENU = 1, PLAY = 2;
 	public static final String Title = "Tile Infection"; //temporary name
@@ -48,7 +49,14 @@ public class Game extends StateBasedGame
 		catch (Exception e) {e.printStackTrace();}	
 		enterState(MENU);
 	}
-
+	public static int rndX()
+	{
+		return new Random().nextInt(TWidth);
+	}
+	public static int rndY()
+	{
+		return new Random().nextInt(THeight);
+	}
 	public static void main(String args[]) throws SlickException
 	{
 		 AppGameContainer app = new AppGameContainer(new Game());

@@ -30,13 +30,6 @@ import org.newdawn.slick.state.StateBasedGame;
  */
 public class GameBoard extends Board
 {
-	public static final int air = 0, living = 10, typesOfTile = 19, boss = typesOfTile - 1, meteor = 99;
-	public static final int stone = 0, dirt = 1, grass = 2, charred = 3, barren = 4, mountain = 5, poisoned = 6, typesOfTerrain = 7;
-	public static final int no_foliage = 0, tall_grass = 1, plant = 2, coverPlant = 3, lifeGiver = 4, typesOfFoliage = 5;
-	public static final int no_placeable = 0, villager = 1, canon = 2, typesOfPlaceable = 3;
-	public static final int no_insect = 0, insect_drop = 1, insect = 2, typesOfInsect = 3;
-	
-	protected int turns = 100, turn = 0, stopTime = 0,counter = 0;
 	protected GameOver gameOver = null;
 	protected BoardGenManager boardGenManager;
 	protected ParticleGenerator particleGen = new ParticleGenerator(this);
@@ -112,7 +105,6 @@ public class GameBoard extends Board
 			{
 				alive = false;
 			}
-
     	}
 		else
 		{
@@ -155,24 +147,7 @@ public class GameBoard extends Board
     			{
     				if(insectGrid[i][j] == insect_drop)
     				{
-    					insectGrid[i][j] = insect;
-    					if(i + 1 < Game.TWidth && foliageGrid[i + 1][j] != GameBoard.no_foliage && insectGrid[i + 1][j] == GameBoard.no_insect && grid[i + 1][j] == GameBoard.air)
-    					{
-    						insectGrid[i + 1][j] = insect;
-    					}
-    					if(i - 1 > 0 && foliageGrid[i - 1][j] != GameBoard.no_foliage && insectGrid[i - 1][j] == GameBoard.no_insect && grid[i - 1][j] == GameBoard.air)
-    					{
-    						insectGrid[i - 1][j] = insect;
-    					}
-    					
-    					if(j + 1 < Game.THeight && foliageGrid[i][j + 1] != GameBoard.no_foliage && insectGrid[i][j + 1] == GameBoard.no_insect && grid[i][j + 1] == GameBoard.air)
-    					{
-    						insectGrid[i][j + 1] = insect;
-    					}
-    					if(j - 1 > 0 && foliageGrid[i][j - 1] != GameBoard.no_foliage && insectGrid[i][j - 1] == GameBoard.no_insect && grid[i][j - 1] == GameBoard.air)
-    					{
-    						insectGrid[i][j - 1] = insect;
-    					}
+    					insectGrid = placeAround(i, j, grid, insectGrid, foliageGrid, insect, true);
     				}
     				if(placeableGrid[i][j] == canon)
     				{
@@ -187,7 +162,7 @@ public class GameBoard extends Board
     					foliageGrid[i][j] = no_foliage;
     					if(terrainGrid[i][j] == grass)terrainGrid[i][j] = dirt;
     					if(grid[i][j] != air && grid[i][j] != meteor)damage(i, j, 3);
-    					moveInsect(i, j);
+    					move(i, j, insectGrid, foliageGrid, insect);
     				}
     				if(placeableGrid[i][j] == villager)dollars += 5;
     				if(grid[i][j] != air)
@@ -252,18 +227,15 @@ public class GameBoard extends Board
 		}
 		else shellArea(x, y, radius);
     }
-    public void moveInsect(int i, int j)
+    public void move(int x, int y, int[][] placeGrid, int[][] checkGrid, int placeId)
     {
-    	insectGrid[i][j] = no_insect;
+    	placeGrid[x][y] = 0;
     	boolean[] moves = new boolean[4];
-    	if(i - 1 < 0 || foliageGrid[i - 1][j] == no_foliage)moves[0] = false;
-    	else moves[0] = true;
-    	if(i + 1 >= Game.TWidth || foliageGrid[i + 1][j] == no_foliage)moves[1] = false;
-    	else moves[1] = true;
-    	if(j - 1 < 0 || foliageGrid[i][j - 1] == no_foliage)moves[2] = false;
-    	else moves[2] = true;
-    	if(j + 1 >= Game.THeight || foliageGrid[i][j + 1] == no_foliage)moves[3] = false;
-    	else moves[3] = true;
+    	for(int i = 0;i < moves.length;i++)moves[i] = true;
+    	if(x - 1 < 0 || checkGrid[x - 1][y] == 0)moves[0] = false;
+    	if(x + 1 >= Game.TWidth || checkGrid[x + 1][y] == 0)moves[1] = false;
+    	if(y - 1 < 0 || checkGrid[x][y - 1] == 0)moves[2] = false;
+    	if(y + 1 >= Game.THeight || checkGrid[x][y + 1] == 0)moves[3] = false;
     	
     	List<Integer> list = new ArrayList<Integer>();
     	for(int k = 0;k < moves.length;k++)
@@ -272,26 +244,22 @@ public class GameBoard extends Board
     	}
     	if(list.size() >= 1)
     	{
-    		move(i, j, list.get(rnd.nextInt(list.size())).intValue());
-    	}
-    }
-    public void move(int x, int y, int dir)
-    {
-    	if(dir == 0)
-    	{
-    		insectGrid[x - 1][y] = insect;
-    	}
-    	if(dir == 1)
-    	{
-    		insectGrid[x + 1][y] = insect;
-    	}
-    	if(dir == 2)
-    	{
-    		insectGrid[x][y - 1] = insect;
-    	}
-    	if(dir == 3)
-    	{
-    		insectGrid[x][y + 1] = insect;
+    		int dir = list.get(rnd.nextInt(list.size())).intValue();
+    		switch(dir)
+    		{
+    		case 0:
+    			placeGrid[x - 1][y] = placeId;
+    			break;
+    		case 1:
+    			placeGrid[x + 1][y] = placeId;
+    			break;
+    		case 2:
+    			placeGrid[x][y - 1] = placeId;
+    			break;
+    		case 3:
+    			placeGrid[x][y + 1] = placeId;
+    			break;
+    		}
     	}
     }
 	public void spawnFire(int x, int y, int num) throws SlickException
@@ -299,7 +267,7 @@ public class GameBoard extends Board
 		if(terrainGrid[x][y] == grass || terrainGrid[x][y] == dirt) terrainGrid[x][y] = charred;
 		for(int i = 0; i < num; i++)
 		{
-			particleGen.addParticle(new Fire(gameInfo, new Vector2f(x * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Particle.scale / 2, y * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Particle.scale / 2)));
+			particleGen.addParticle(Particle.getFireBall(gameInfo, new Vector2f(x * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2, y * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2)));
 		}
 	}
 	public void spawnPoison(int x, int y, int num) throws SlickException
@@ -307,14 +275,14 @@ public class GameBoard extends Board
 		if(terrainGrid[x][y] == grass || terrainGrid[x][y] == dirt) terrainGrid[x][y] = poisoned;
 		for(int i = 0; i < num; i++)
 		{
-			particleGen.addParticle(new Poison(gameInfo, new Vector2f(x * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Particle.scale / 2, y * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Particle.scale / 2)));
+			particleGen.addParticle(Particle.getPoison(gameInfo, new Vector2f(x * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2, y * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2)));
 		}
 	}
 	public void spawnCload(int x, int y, int num) throws SlickException
 	{
 		for(int i = 0; i < num; i++)
 		{
-			particleGen.addParticle(new Cload(gameInfo, new Vector2f(x * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Particle.scale / 2, y * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Particle.scale / 2)));
+			particleGen.addParticle(Particle.getCload(gameInfo, new Vector2f(x * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2, y * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2)));
 		}
 	}
 	public boolean validFireSpot(int x, int y)
@@ -365,7 +333,7 @@ public class GameBoard extends Board
             		int life = 35;
             		float newDx = (float) (speed * Math.cos(Math.random() * 2 * Math.PI));
               		float newDy = (float) (speed * Math.sin(Math.random() * 2 * Math.PI));
-              		particleGen.addParticle(new Particle(gameInfo, new Image("res/smoke_tile.png"), new Vector2f(x * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Particle.scale / 2, y * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Particle.scale / 2), new Vector2f(newDx, newDy), life));
+              		particleGen.addParticle(new Basic_Particle(gameInfo, new Image("res/smoke_tile.png"), new Vector2f(x * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2, y * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2), new Vector2f(newDx, newDy), life));
             	}
     		}
     	}

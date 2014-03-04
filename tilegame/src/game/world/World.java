@@ -19,7 +19,11 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
-
+/*
+ * holds GameInfo and GameBoard, calls their update and render methods
+ * tells the GameBoard whether or not it should load a game
+ * 
+ */
 public class World
 {
 	public static String boardID = "Board";

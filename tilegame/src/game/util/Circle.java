@@ -5,7 +5,9 @@ import game.Game;
 import java.util.ArrayList;
 
 import org.newdawn.slick.geom.Vector2f;
-
+/*
+ * returns the x and y coords in an arrayList of the tiles inside the circle.
+ */
 public class Circle
 {
 	public ArrayList<Vector2f> getCircle(int x0, int y0, int radius)
