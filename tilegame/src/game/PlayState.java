@@ -1,49 +1,40 @@
 package game;
 
+import java.awt.Graphics;
+
 import game.world.World;
 
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.state.BasicGameState;
-import org.newdawn.slick.state.StateBasedGame;
 
-public class PlayState extends BasicGameState
+public class PlayState
 {
 	private World world = null;
-	public PlayState(int id) throws SlickException
+	public PlayState(int id)
 	{
 
 	}
-	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException 
+	public void init() 
 	{
 	}
-	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException
+	public void update(int delta) throws InterruptedException
 	{
 		if(world == null)
 		{
-			try
-			{
-				world = new World(MenuState.load);
-			} catch (InterruptedException e)
-			{
-				e.printStackTrace();
-			}
+			world = new World(MenuState.load);
 		}
 		try
 		{
-			world.update(gc, sbg, delta);
+			world.update(delta);
 		} catch (InterruptedException e)
 		{
 			e.printStackTrace();
 		}
 	}
-	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException
+	public void render(Graphics g)
 	{
-		g.setAntiAlias(true);
+//		g.setAntiAlias(true);
 		if(world != null)
 		{
-			world.render(gc, sbg, g);
+			world.render(g);
 		}
 	}
 	public int getID() {return 2;}

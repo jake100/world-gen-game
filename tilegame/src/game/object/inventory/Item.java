@@ -1,34 +1,37 @@
 package game.object.inventory;
 
-import game.Game;
 import game.object.GameBoard;
 import game.object.inventory.Inventory.Dir;
 import game.util.GameImage;
 import game.world.World;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.state.StateBasedGame;
+import javax.imageio.ImageIO;
 
 public abstract class Item
 {
-	protected Image img;
+	protected BufferedImage img;
 	protected GameImage gameimg = new GameImage();
 	protected int count = 0, startCount;
 	protected GameBoard board;
 	protected Random rnd = new Random();
-	public Item(GameBoard board, String path, int count) throws SlickException
+	public Item(GameBoard board, String path, int count) throws IOException
 	{
-		img = gameimg.getImage(path).getScaledCopy(Game.Scale * 2f);
+		// read image from folder
+        File folderInput = new File(path);
+        img = ImageIO.read(folderInput);
+
+        
 		startCount = count;
 		this.board = board;
 	}
-	public abstract void update(GameContainer gc, StateBasedGame sbg, World world, int delta) throws SlickException;
-	public abstract void fire(int x, int y) throws SlickException;
-	public abstract void fire(int x, int y, Dir dir) throws SlickException;
+	public abstract void update(World world, int delta);
+	public abstract void fire(int x, int y);
+	public abstract void fire(int x, int y, Dir dir);
 	public int getCount()
 	{
 		return count;
@@ -37,11 +40,11 @@ public abstract class Item
 	{
 		this.count = count;
 	}
-	public Image getImg()
+	public BufferedImage getImg()
 	{
 		return img;
 	}
-	public void setImg(Image img)
+	public void setImg(BufferedImage img)
 	{
 		this.img = img;
 	}

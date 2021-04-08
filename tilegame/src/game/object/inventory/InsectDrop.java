@@ -13,15 +13,15 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class InsectDrop extends Item
 {
-	public InsectDrop(GameBoard board) throws SlickException
+	public InsectDrop(GameBoard board)
 	{
 		super(board, "res/insect_icon.png", 1);
 	}
-	public void update(GameContainer gc, StateBasedGame sbg, World world, int delta) throws SlickException
+	public void update(GameContainer gc, StateBasedGame sbg, World world, int delta)
 	{
 		
 	}
-	public void fire(int x, int y) throws SlickException
+	public void fire(int x, int y)
 	{
 		if(count > 0)
 		{
@@ -55,7 +55,7 @@ public class InsectDrop extends Item
 			insectGrid[x][y] = GameBoard.insect_drop;
 		}
 	}
-	public void fire(int x, int y, Dir dir) throws SlickException
+	public void fire(int x, int y, Dir dir)
 	{
 		
 	}

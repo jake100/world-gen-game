@@ -15,11 +15,11 @@ public class CanonPlacer extends Item
 	{
 		super(board, "res/canon_icon.png", 1);
 	}
-	public void update(GameContainer gc, StateBasedGame sbg, World world, int delta) throws SlickException
+	public void update(World world, int delta)
 	{
 		
 	}
-	public void fire(int x, int y) throws SlickException
+	public void fire(int x, int y)
 	{
 		if(count > 0)
 		{
@@ -61,7 +61,7 @@ public class CanonPlacer extends Item
 			board.setGrid(grid);
 		}
 	}
-	public void fire(int x, int y, Dir dir) throws SlickException
+	public void fire(int x, int y, Dir dir)
 	{
 	}
 }

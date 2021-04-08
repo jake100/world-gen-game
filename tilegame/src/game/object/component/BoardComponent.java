@@ -16,7 +16,7 @@ public abstract class BoardComponent
 	  {
 	  		this.board = board;
 	  }
-	  public abstract void update(GameContainer gc, StateBasedGame sbg, World world, int delta) throws SlickException;
+	  public abstract void update(World world, int delta);
 	  public boolean isEnabled() {return enabled;}
 	  public void setEnabled(boolean enabled) {this.enabled = enabled;}
 	  public void setOwner(GameBoard board){this.board = board;}
@@ -26,6 +26,6 @@ public abstract class BoardComponent
 	{
 		this.id = id;
 	}
-	public abstract void tileUpdate() throws SlickException;
+	public abstract void tileUpdate();
 	  
 }

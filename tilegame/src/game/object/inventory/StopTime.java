@@ -11,16 +11,16 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class StopTime extends Item
 {
-	public StopTime(GameBoard board) throws SlickException
+	public StopTime(GameBoard board)
 	{
 		super(board, "res/stop_time_icon.png", 1);
 	}
 
-	public void update(GameContainer gc, StateBasedGame sbg, World world, int delta) throws SlickException
+	public void update(GameContainer gc, StateBasedGame sbg, World world, int delta)
 	{
 		
 	}
-	public void fire(int x, int y) throws SlickException
+	public void fire(int x, int y)
 	{
 		if(count > 0)
 		{
@@ -29,7 +29,7 @@ public class StopTime extends Item
 			board.stopTime(1);
 		}
 	}
-	public void fire(int x, int y, Dir dir) throws SlickException
+	public void fire(int x, int y, Dir dir)
 	{
 	}
 }

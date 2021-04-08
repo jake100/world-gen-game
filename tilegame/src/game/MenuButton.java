@@ -1,40 +1,55 @@
 package game;
 
 
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.state.StateBasedGame;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 
-public class MenuButton extends Button
+import game.util.BasicImage;
+import game.util.Util;
+
+public class MenuButton extends Button implements ImageObserver
 {
-	private Image buttonImage = null;
-	private Image litButtonImage = null;
+	private BasicImage buttonImage = new BasicImage();
+	private BasicImage litButtonImage = new BasicImage();
 	private String text;
-	public MenuButton(String str, int y) throws SlickException
+	
+	public MenuButton(String str, int y)
 	{
 		this.text = str;
 		this.y = y;
 		scale = 2f;
-		buttonImage = new Image("res/button.png");
-		litButtonImage = new Image("res/button_lit.png");
-		width = buttonImage.getWidth();
-		height = buttonImage.getHeight();
-		x = (int) ((Game.Width / 2 - buttonImage.getWidth()) * scale / 2);
+		buttonImage = Util.loadImage("res/button.png");
+		litButtonImage = Util.loadImage("res/button_lit.png");
+		width = buttonImage.width;
+		height = buttonImage.height;
+		x = (int) ((Game.Width / 2 - buttonImage.getWidth(null)) * scale / 2);
 	}
-	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException
+	public void update(double delta)
 	{
-		super.update(gc, sbg, delta);
+		super.update(delta);
+	}
+	public void render(Graphics g)
+	{
+	
 		
-	}
-	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException
-	{
-		if(entered)litButtonImage.draw(x, y, scale);
-		else buttonImage.draw(x, y, scale);
-		g.setFont(Game.smallPrint);
+//		if(entered)g.drawImage(litButtonImage, x, y, null);
+//		else g.drawImage(buttonImage.img, x, y, null);
+//		g.setColor(Color.white);
+//		g.drawString(text, (int)(x + buttonImage.width * scale / 2), (int)(y * scale / 2));
+//		
+		if(entered)g.drawImage(litButtonImage, x, y, null);
+		else g.drawImage(buttonImage, x, y, null);
+		int width = g.getFontMetrics().stringWidth(text);
 		g.setColor(Color.white);
-		g.drawString(text, x + buttonImage.getWidth() * scale / 2 - Game.smallPrint.getWidth(text) / 2, y + buttonImage.getHeight() * scale / 2 - Game.smallPrint.getHeight() / 2);
+		g.drawString(text, (int)(x + buttonImage.width * scale / 2 - width / 2), (int)(y + buttonImage.height * scale / 2 - width / 2));
+	}
+	@Override
+	public boolean imageUpdate(Image arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

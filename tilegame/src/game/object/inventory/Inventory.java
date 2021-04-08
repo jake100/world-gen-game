@@ -16,7 +16,7 @@ public class Inventory extends BoardRender
 	 */
 	public static enum Dir{Left, Right, Up, Down, Not_Moving}
 	private Item[] items;
-	public Inventory(GameBoard owner) throws SlickException
+	public Inventory(GameBoard owner)
 	{
 		super(owner);
 		items = new Item[3];
@@ -24,10 +24,10 @@ public class Inventory extends BoardRender
 		reset();
 	}
 
-	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException
+	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
 	{
 	}
-	public int[] saveItem(int item) throws SlickException
+	public int[] saveItem(int item)
 	{
 		int[] array = new int[2];
 		array[0] = getId(item);
@@ -35,7 +35,7 @@ public class Inventory extends BoardRender
 		return array;
 		
 	}
-	public int getId(int item) throws SlickException
+	public int getId(int item)
 	{
 		if(items[item] instanceof VillagerDrop)return 0;
 		if(items[item] instanceof InsectDrop)return 1;
@@ -49,7 +49,7 @@ public class Inventory extends BoardRender
 		if(items[item] instanceof NothingEquiped)return 9;
 		return 9;
 	}
-	public void loadItem(int item, int id, int count) throws SlickException
+	public void loadItem(int item, int id, int count)
 	{
 		if(id == 0)
 		{
@@ -93,24 +93,24 @@ public class Inventory extends BoardRender
 		}
 		items[item].setCount(count);
 	}
-	public void update(GameContainer gc, StateBasedGame sbg, World world, int delta) throws SlickException
+	public void update(World world, int delta)
 	{
-		if(items[0] != null)items[0].update(gc, sbg, world, delta);
-		if(items[1] != null)items[1].update(gc, sbg, world, delta);
+		if(items[0] != null)items[0].update(world, delta);
+		if(items[1] != null)items[1].update(world, delta);
 	}
-	public void firstFire(int x, int y) throws SlickException
+	public void firstFire(int x, int y)
 	{
 		if(items[0] != null)items[0].fire(x, y);
 	}
-	public void secondFire(int x, int y) throws SlickException
+	public void secondFire(int x, int y)
 	{
 		if(items[1] != null)items[1].fire(x, y);
 	}
-	public void dirFire(int x, int y, Dir dir) throws SlickException
+	public void dirFire(int x, int y, Dir dir)
 	{
 		if(items[2] != null)items[2].fire(x, y, dir);
 	}
-	public void tileUpdate() throws SlickException
+	public void tileUpdate()
 	{
 		
 	}
@@ -141,7 +141,7 @@ public class Inventory extends BoardRender
 		this.items = items;
 	}
 	//returns the inventory to its default starting items
-	public void reset() throws SlickException
+	public void reset()
 	{
 		items[0] = new VillagerDrop(board);
 		items[0].setCount(5);

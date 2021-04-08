@@ -35,7 +35,7 @@ public class World
 	private PauseMenu pauseMenu;
 	private File file;
 	private PlayerInput playerInput;
-	public World(boolean loadGame) throws SlickException, InterruptedException
+	public World(boolean loadGame)
 	{
 		this.loadGame = loadGame;
 		if(!loadGame)board = getLevel(gameInfo.getLevel(), !loadGame);
@@ -45,7 +45,7 @@ public class World
 		}
 		
 	}
-	public GameBoard getLevel(int i, boolean loaded) throws SlickException, InterruptedException
+	public GameBoard getLevel(int i, boolean loaded) throws InterruptedException
 	{
 		file = new File(board);
 		Inventory inventory = new Inventory(board);
@@ -72,12 +72,12 @@ public class World
 		gameBoard.setFile(file);
 		return gameBoard;
 	}
-	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException, InterruptedException
+	public void update(int delta) throws InterruptedException
 	{
 		if(board.isAlive())
 		{
-			board.update(gc, sbg, this, delta);
-			if(pauseMenu != null)pauseMenu.update(gc, sbg, delta);
+			board.update(this, delta);
+			if(pauseMenu != null)pauseMenu.update(delta);
 		}
 		else
 		{
@@ -101,13 +101,13 @@ public class World
 	    }
         for(int i = 0; i < objects.size();i++)
         {
-        	objects.get(i).update(gc, sbg, this, delta);
+        	objects.get(i).update(this, delta);
         }
 	}
-	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException
+	public void render(java.awt.Graphics g)
 	{
-        if(board != null)board.render(gc, sbg, g);
-        if(pauseMenu != null)pauseMenu.render(gc, sbg, g);
+        if(board != null)board.render(g);
+        if(pauseMenu != null)pauseMenu.render(g);
 	}
 	public void spawn(GameObject object)
 	{

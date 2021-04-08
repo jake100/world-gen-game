@@ -1,21 +1,37 @@
 package game.util;
 
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+
+import javax.imageio.ImageIO;
+
 
 public class GameImage
 {
 	/*
 	 * makes scaled images less blurry
 	 */
-	public Image getImage(String path) throws SlickException
-	{
-		Image temp = null;
-		if(path != null)
-		{
-			temp = new Image(path);
-			temp.setFilter(Image.FILTER_NEAREST);
+    private static HashMap<String, BufferedImage> cache = new HashMap<String, BufferedImage>();
+    public static BufferedImage getImage (String path) {
+        BufferedImage image = null;
+
+		if (cache.containsKey(path)) {
+			return cache.get(path);
 		}
-		return temp;
+
+		try {
+			image = ImageIO.read(new File(path));
+
+			if (!cache.containsKey(path)) {
+				cache.put(path, image);
+			}
+		} 
+		catch (IOException e) {
+		    e.printStackTrace();
+        }
+
+		return image;
 	}
 }

@@ -12,13 +12,13 @@ import org.newdawn.slick.state.StateBasedGame;
 public class FireBomb extends Item
 {
 	private int[][] grid, terrainGrid;
-	public FireBomb(GameBoard board) throws SlickException
+	public FireBomb(GameBoard board)
 	{
 		super(board, "res/bomb_icon.png", 1);
 		grid = board.getGrid();
 		terrainGrid = board.getTerrainGrid();
 	}
-	public void update(GameContainer gc, StateBasedGame sbg, World world, int delta) throws SlickException
+	public void update(World world, int delta) 
 	{
 		
 	}
@@ -29,7 +29,7 @@ public class FireBomb extends Item
 		return true;
 	}
 
-	public void fire(int x, int y) throws SlickException
+	public void fire(int x, int y)
 	{
 		if(count > 0)
 		{
@@ -107,7 +107,7 @@ public class FireBomb extends Item
 		}
 	}
 	@Override
-	public void fire(int x, int y, Dir dir) throws SlickException
+	public void fire(int x, int y, Dir dir)
 	{
 	}
 }

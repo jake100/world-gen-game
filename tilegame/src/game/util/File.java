@@ -13,9 +13,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.state.StateBasedGame;
 
 public class File extends BoardComponent
 {
@@ -34,7 +31,7 @@ public class File extends BoardComponent
 	{
 		super(board);
 	}
-	public void load(String path) throws NumberFormatException, SlickException
+	public void load(String path) throws NumberFormatException
 	{
         try 
         {
@@ -66,7 +63,7 @@ public class File extends BoardComponent
             System.out.println("There was a promlem loading the file " + e);
         }
 	}
-	public void save(String path, Inventory inventory, GameInfo gameInfo) throws SlickException
+	public void save(String path, Inventory inventory, GameInfo gameInfo)
 	{
 		 try 
 	        {
@@ -130,12 +127,12 @@ public class File extends BoardComponent
         out.newLine();
 	}
 	@Override
-	public void update(GameContainer gc, StateBasedGame sbg, World world,
-			int delta) throws SlickException
+	public void update(World world,
+			int delta)
 	{
 	}
 	@Override
-	public void tileUpdate() throws SlickException
+	public void tileUpdate()
 	{
 	}
 	public int[] getValues()

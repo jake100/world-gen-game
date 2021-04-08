@@ -13,7 +13,7 @@ public class BoardGenManager
 	private BoardGen boardGen;
 	private GameBoard board;
 	private boolean generated = false;
-	public BoardGenManager(GameBoard board, int enemies, int start, int difficulty) throws SlickException
+	public BoardGenManager(GameBoard board, int enemies, int start, int difficulty)
 	{
 		boardGen = new BoardGen(board);
 		board.getParticleGen().setParticleGen(false);
@@ -22,7 +22,7 @@ public class BoardGenManager
 		this.board = board;
 		this.difficulty = difficulty;
 	}
-	public void generate() throws SlickException
+	public void generate()
 	{
 		System.out.println(count);
 		ArrayList<Vector2f> terrainList = getGridList(board.getTerrainGrid()), enemyList = getGridList(board.getGrid());

@@ -3,8 +3,13 @@ package game.object.component;
 import game.Game;
 import game.object.GameBoard;
 import game.object.inventory.Inventory;
+import game.util.Keyboard;
 import game.util.SoundBank;
 import game.world.World;
+
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.PointerInfo;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
@@ -16,7 +21,7 @@ import org.newdawn.slick.state.StateBasedGame;
 public class PlayerInput extends BoardComponent
 {
 	private int mx, my, gridX, gridY, clickCount;
-	private Input input;
+	private Keyboard keyboard = new Keyboard();
 	private boolean up = false, down = false, left = false, right = false, rKey, fKey, click, altClick;
 	private boolean mouseWait = false;
 	private Inventory inventory;
@@ -28,7 +33,7 @@ public class PlayerInput extends BoardComponent
 		this.shop = shop;
 		click();
 	}
-	public void update(GameContainer gc, StateBasedGame sbg, World world, int delta) throws SlickException
+	public void update(World world, int delta)
 	{
 		up = false;
 		down = false;
@@ -58,7 +63,8 @@ public class PlayerInput extends BoardComponent
 				clickCount -= delta;
 				if(!mouseWait)
 				{
-					gc.setMouseCursor("res/cursor_wait.png",0,0);
+					
+//					gc.setMouseCursor("res/cursor_wait.png",0,0);
 					mouseWait = true;
 				}
 			}
@@ -66,14 +72,15 @@ public class PlayerInput extends BoardComponent
 			{
 				if(mouseWait)
 				{
-					gc.setMouseCursor("res/cursor.png",0,0);
+//					gc.setMouseCursor("res/cursor.png",0,0);
 					mouseWait = false;
 				}
 			}
-			input = gc.getInput();
-			if(input.isKeyDown(Input.KEY_R))rKey = true;
-			mx = input.getMouseX();
-			my = input.getMouseY();
+			if(keyboard.isDown(Input.KEY_R))rKey = true;
+			PointerInfo a = MouseInfo.getPointerInfo();
+			Point b = a.getLocation();
+			mx = (int) b.getX();
+			my = (int) b.getY();
 			
 			int[][] grid = board.getGrid();
 
@@ -92,13 +99,13 @@ public class PlayerInput extends BoardComponent
 						}
 						if(entered && clickCount <= 0 && enabled)
 						{
-							if(input.isMouseButtonDown(0)){click = true;}
-							if(input.isMouseButtonDown(1)){altClick = true;}
-							if(input.isKeyDown(Input.KEY_W)){up = true;}
-							if(input.isKeyDown(Input.KEY_S)){down = true;}
-							if(input.isKeyDown(Input.KEY_A)){left = true;}
-							if(input.isKeyDown(Input.KEY_D)){right = true;}
-							if(input.isKeyDown(Input.KEY_F)){fKey = true;}
+							if(keyboard.isDown(Input.MOUSE_LEFT_BUTTON)){click = true;}
+							if(keyboard.isDown(Input.MOUSE_RIGHT_BUTTON)){altClick = true;}
+							if(keyboard.isDown(Input.KEY_W)){up = true;}
+							if(keyboard.isDown(Input.KEY_S)){down = true;}
+							if(keyboard.isDown(Input.KEY_A)){left = true;}
+							if(keyboard.isDown(Input.KEY_D)){right = true;}
+							if(keyboard.isDown(Input.KEY_F)){fKey = true;}
 							inventory = (Inventory) board.getBoardComponent("Inventory");
 							if(isClick())
 							{
@@ -232,7 +239,7 @@ public class PlayerInput extends BoardComponent
 	{
 		this.gridY = gridY;
 	}
-	public void tileUpdate() throws SlickException
+	public void tileUpdate()
 	{
 	}
 	public boolean isrKey()
@@ -243,6 +250,6 @@ public class PlayerInput extends BoardComponent
 	{
 		this.rKey = rKey;
 	}
-	
+
 	
 }

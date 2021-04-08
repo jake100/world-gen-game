@@ -11,16 +11,16 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class VillagerDrop extends Item
 {
-	public VillagerDrop(GameBoard board) throws SlickException
+	public VillagerDrop(GameBoard board)
 	{
 		super(board, "res/villager_icon.png", 1);
 	}
 
-	public void update(GameContainer gc, StateBasedGame sbg, World world, int delta) throws SlickException
+	public void update(World world, int delta)
 	{
 		
 	}
-	public void fire(int x, int y) throws SlickException
+	public void fire(int x, int y)
 	{
 		if(count > 0)
 		{
@@ -35,7 +35,7 @@ public class VillagerDrop extends Item
 			board.setPlaceableGrid(grid);
 		}
 	}
-	public void fire(int x, int y, Dir dir) throws SlickException
+	public void fire(int x, int y, Dir dir)
 	{
 	}
 

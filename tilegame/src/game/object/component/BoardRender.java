@@ -14,5 +14,5 @@ public abstract class BoardRender extends BoardComponent
 			super(owner);
 		}
 
-	 public abstract void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException;
+	 public abstract void render(java.awt.Graphics g);
 }

@@ -1,54 +1,65 @@
 package game;
 
-
-import java.awt.Font;
-import java.io.InputStream;
+import java.awt.Graphics;
 import java.util.Random;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.TrueTypeFont;
-import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.util.ResourceLoader;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
-public class Game extends StateBasedGame 
+import game.util.Keyboard;
+
+public class Game implements Runnable
 {
 	public static final int Scale = 1, TileSize = 15, ScaledTileSize = (int)(TileSize * Scale);
 	public static final int TWidth = 75, THeight = 55;
 	public static final int Width = ScaledTileSize * TWidth, Height = ScaledTileSize * THeight + ScaledTileSize * 8;
 	public static final int Splash = 0, MENU = 1, PLAY = 2;
 	public static final String Title = "Tile Infection"; //temporary name
-	public static TrueTypeFont gameFont, smallPrint; // 2 different sizes of the same font
-	public static GameContainer gc;
-	public Game() throws SlickException
+	public MenuState menuState = new MenuState(0);
+	public PlayState playState = new PlayState(0);
+	public TileGameContainer tgc = new TileGameContainer();
+	public static Graphics g;
+	public Game()
 	{
-		super(Title);
-		
-		this.addState(new MenuState(MENU));
-		this.addState(new PlayState(PLAY));
+		menuState.init();
 	}
-	public void initStatesList(GameContainer gc) throws SlickException 
-	{
-		gc.setShowFPS(false);
-		getState(MENU).init(gc, this);
-		getState(PLAY).init(gc, this);
-		this.gc = gc;
-		gc.setMouseCursor("res/cursor.png",0,0);
-		try 
+    public void run () {
+    	long lastTime = System.nanoTime();
+		long timer = System.currentTimeMillis();
+		final double ns = 1000000000.0 / 60.0;
+		double delta = 0;
+		while(true)
 		{
-			InputStream inputStream	= ResourceLoader.getResourceAsStream("res/Minecraftia.ttf");
-	 
-			Font awtFont2 = Font.createFont(Font.TRUETYPE_FONT, inputStream);
-			awtFont2 = awtFont2.deriveFont(22f);
-			gameFont = new TrueTypeFont(awtFont2, false);
-			awtFont2 = awtFont2.deriveFont(12f);
-			smallPrint = new TrueTypeFont(awtFont2, false);
-	 
+			long now = System.nanoTime();
+			delta += (now - lastTime) / ns;
+			lastTime = now;
+			render();
+			while(delta >= 1)
+			{
+				try {
+					update(delta);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				delta--;
+			}
+			
+			if(System.currentTimeMillis() - timer > 1000)
+			{
+				timer += 1000;
+			}
 		}
-		catch (Exception e) {e.printStackTrace();}	
-		enterState(MENU);
-	}
+    }
+    public void update(double delta) throws InterruptedException
+    {
+    	menuState.update(delta);
+    }
+    public void render()
+    {
+    	
+    	menuState.render(g);
+    }
 	public static int rndX()
 	{
 		return new Random().nextInt(TWidth);
@@ -57,11 +68,22 @@ public class Game extends StateBasedGame
 	{
 		return new Random().nextInt(THeight);
 	}
-	public static void main(String args[]) throws SlickException
+	public static void main(String args[])
 	{
-		 AppGameContainer app = new AppGameContainer(new Game());
-		 app.setDisplayMode(Width, Height, false);
-		 app.start();
+        JFrame frame = new JFrame();
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(Width, Height);
+        frame.setLocationRelativeTo(null);
+
+        Keyboard keyboard = Keyboard.getInstance();
+        frame.addKeyListener(keyboard);
+
+        JPanel panel = new JPanel();
+        frame.add(panel);
+        
+        g = panel.getGraphics();
+        new Thread(new Game()).start();
 	}
 
 }

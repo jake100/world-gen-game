@@ -29,7 +29,7 @@ public class BoardGen
 	private InsectDrop insectDrop;
 	private FireStorm fireStorm;
 	
-	public BoardGen(GameBoard board) throws SlickException
+	public BoardGen(GameBoard board)
 	{
 		this.board = board;
 		fireBomb = new FireBomb(board);
@@ -44,7 +44,7 @@ public class BoardGen
 		terrainGrid = board.getTerrainGrid();
 		burnGrid = board.getBurnGrid();
 	}
-	public void simulateTurns(int count) throws SlickException
+	public void simulateTurns(int count)
 	{
 		for(int i = 0; i < count; i++)
 		{
@@ -52,7 +52,7 @@ public class BoardGen
 			board.setTurn(0);
 		}
 	}
-	public void prepareForGame() throws SlickException
+	public void prepareForGame()
 	{
 		board.setGrid(grid);
 		board.setTerrainGrid(terrainGrid);
@@ -72,7 +72,7 @@ public class BoardGen
 			}
 		}
 	}
-	public void weoponFire(int count) throws SlickException
+	public void weoponFire(int count)
 	{
 		for(int i = 0; i < count;i++)
 		{

@@ -4,18 +4,14 @@ import game.GameClass;
 import game.world.World;
 
 import java.util.ArrayList;
-
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Vector2f;
-import org.newdawn.slick.state.StateBasedGame;
+import game.util.Vector2f;
 /*
  * Owns a list of game components that can be added, removed, searched for, turned off or on, swapped and are updated when this class is.
  */
-public abstract class GameObject extends GameClass
+public abstract class GameObject<Vector2f> extends GameClass
 {
 	protected String id;
-	protected Vector2f pos = new Vector2f();
+	protected Vector2f pos = Vector2f();
 	protected float scale;
 	protected ArrayList<GameClass> components = null;
 	protected GameInfo gameInfo;
@@ -39,17 +35,17 @@ public abstract class GameObject extends GameClass
         }
 	return null;
     }
-    public void update(GameContainer gc, StateBasedGame sbg, World world, int delta) throws SlickException
+    public void update(World world, int delta)
     {
         for(GameClass component : components)
         {
-            if(component.getOwner() != null)component.update(gc, sbg, world, delta);
+            if(component.getOwner() != null)component.update(world, delta);
         }
     }
 	public ArrayList<GameClass> getComponents(){return components;}
 	public void setComponents(ArrayList<GameClass> components){this.components = components;}
-	public Vector2f getPos(){return pos;}
-	public void setPos(Vector2f pos){this.pos = pos;}
+	public game.util.Vector2f getPos(){return pos;}
+	public void setPos(game.util.Vector2f pos){this.pos = pos;}
 	public float getScale(){return scale;}
 	public void setScale(float scale){this.scale = scale;}
 	

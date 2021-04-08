@@ -9,46 +9,40 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-public class SplashState extends BasicGameState
+public class SplashState
 {
 	private World world = null;
-	public SplashState(int id) throws SlickException
+	private GameState gs = new GameState();
+	public SplashState(int id)
 	{
 		
 	}
-	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException
+	public void init()
 	{
 		
 	}
-	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException 
+	public void update(int delta) 
 	{
 		System.out.println("splash");
 		if(world == null)
 		{
-			try
-			{
-				world = new World(false);
-			} catch (InterruptedException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			world = new World(false);
 		}
 		try
 		{
-			world.update(gc, sbg, delta);
+			world.update(delta);
 		} catch (InterruptedException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if(!world.isAlive())sbg.enterState(1);
+		if(!world.isAlive())gs.enterState(1);
 	}
 
-	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException 
+	public void render(Graphics g) 
 	{
 		g.setAntiAlias(true);
-		if(world != null)world.render(gc, sbg, g);
+		if(world != null)world.render(g);
 	}
 
 	public int getID() {return 0;}

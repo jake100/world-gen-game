@@ -1,23 +1,20 @@
 package game;
 
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.state.StateBasedGame;
+import game.util.MouseInput;
 
 public abstract class BasicUI
 {
 	protected int x, y, width, height, count = 50, wait = 25;
 	protected float scale;
 	protected boolean entered = false, enabled = true;
-	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException
+	MouseInput mi = new MouseInput();
+	public void update(double delta)
 	{
 		entered = false;
 		if(enabled && count <= 0)
 		{
-			Input input = gc.getInput();
-			int mx = input.getMouseX();
-			int my = input.getMouseY();
+			int mx = mi.x;
+			int my = mi.y;
 			if((mx > x && mx < x + width * scale) && (my > y && my < y + height * scale)) entered = true;
 		}
 		else

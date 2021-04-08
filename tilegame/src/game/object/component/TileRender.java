@@ -18,7 +18,7 @@ public class TileRender extends BoardRender
 	private GameImage gameimg = new GameImage();
 	private int[][] grid, terrainGrid, foliageGrid, placeableGrid, insectGrid;
 	private Image[] img, terrainImage, foliageImage, placeableImage, insectImage;
-	public TileRender(GameBoard board, PlayerInput playerInput) throws SlickException
+	public TileRender(GameBoard board, PlayerInput playerInput)
 	{
 		super(board);
 		tileBack = gameimg.getImage("res/back_tile.png").getScaledCopy(Game.Scale);
@@ -89,7 +89,7 @@ public class TileRender extends BoardRender
 		}
 		g.drawImage(tileMark, clickedX * Game.ScaledTileSize, clickedY * Game.ScaledTileSize);
 	}
-	public void tileUpdate() throws SlickException
+	public void tileUpdate()
 	{
 	}
 }

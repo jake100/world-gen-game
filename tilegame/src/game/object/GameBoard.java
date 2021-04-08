@@ -9,8 +9,10 @@ import game.object.component.PlayerInput;
 import game.object.inventory.Inventory;
 import game.util.Circle;
 import game.util.File;
+import game.util.Util;
 import game.world.World;
 
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +40,7 @@ public class GameBoard extends Board
 	protected ChooseFile chooseFile = new ChooseFile();
 	private boolean generating = false;
 	private PlayerInput playerInput;
-	public GameBoard(File file, Inventory inventory, GameInfo gameInfo, int enemies, int start, boolean loaded) throws SlickException, InterruptedException
+	public GameBoard(File file, Inventory inventory, GameInfo gameInfo, int enemies, int start, boolean loaded)
 	{
 		super(gameInfo);
 		boardGenManager = new BoardGenManager(this, enemies, start, 1);
@@ -69,7 +71,7 @@ public class GameBoard extends Board
 			}
 		}
 	}
-	public void loadGame(java.io.File otherFile, Inventory inventory) throws SlickException
+	public void loadGame(java.io.File otherFile, Inventory inventory)
 	{
 		file.load(otherFile.toString());
 	    int[] values = file.getValues();
@@ -88,11 +90,11 @@ public class GameBoard extends Board
 		placeableGrid = file.getPlaceableGrid();
 		burnGrid = file.getBurnGrid();
 	}
-    public void update(GameContainer gc, StateBasedGame sbg, World world, int delta) throws SlickException
+    public void update(World world, int delta)
     {
     	if(!generating)
     	{
-			super.update(gc, sbg, world, delta);
+			super.update(world, delta);
 			if(gameOver == null)
 	    	{
 	    		addBoardComponent(particleGen);
@@ -131,12 +133,11 @@ public class GameBoard extends Board
 			}
 		}
     }
-    public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException
+    public void render(Graphics2D g)
 	{
-		super.render(gc, sbg, g);
-		g.setFont(Game.smallPrint);
+		super.render(g);
 	}
-    public void tileUpdate() throws SlickException
+    public void tileUpdate()
     {
     	if(stopTime == 0)
     	{
@@ -208,11 +209,11 @@ public class GameBoard extends Board
     	if(dollars < dollarMin)dollars = dollarMin;
     	turn = 0;
     }
-    public void shellArea(int x, int y, int radius) throws SlickException
+    public void shellArea(int x, int y, int radius)
     {
     	Circle circle = new Circle();
     	int radius0 = 1;
-    	Vector2f pos = new Vector2f(x, y);
+    	game.util.Vector2f pos = new game.util.Vector2f(x, y);
     	if(radius > 1)
     	{
     		radius0 = rnd.nextInt(radius - 1) + 1;
@@ -262,27 +263,27 @@ public class GameBoard extends Board
     		}
     	}
     }
-	public void spawnFire(int x, int y, int num) throws SlickException
+	public void spawnFire(int x, int y, int num)
 	{
 		if(terrainGrid[x][y] == grass || terrainGrid[x][y] == dirt) terrainGrid[x][y] = charred;
 		for(int i = 0; i < num; i++)
 		{
-			particleGen.addParticle(Particle.getFireBall(gameInfo, new Vector2f(x * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2, y * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2)));
+			particleGen.addParticle(Particle.getFireBall(gameInfo, new game.util.Vector2f(x * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2, y * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2)));
 		}
 	}
-	public void spawnPoison(int x, int y, int num) throws SlickException
+	public void spawnPoison(int x, int y, int num) 
 	{
 		if(terrainGrid[x][y] == grass || terrainGrid[x][y] == dirt) terrainGrid[x][y] = poisoned;
 		for(int i = 0; i < num; i++)
 		{
-			particleGen.addParticle(Particle.getPoison(gameInfo, new Vector2f(x * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2, y * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2)));
+			particleGen.addParticle(Particle.getPoison(gameInfo, new game.util.Vector2f(x * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2, y * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2)));
 		}
 	}
-	public void spawnCload(int x, int y, int num) throws SlickException
+	public void spawnCload(int x, int y, int num)
 	{
 		for(int i = 0; i < num; i++)
 		{
-			particleGen.addParticle(Particle.getCload(gameInfo, new Vector2f(x * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2, y * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2)));
+			particleGen.addParticle(Particle.getCload(gameInfo, new game.util.Vector2f(x * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2, y * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2)));
 		}
 	}
 	public boolean validFireSpot(int x, int y)
@@ -291,7 +292,7 @@ public class GameBoard extends Board
 		if(grid[x][y] == meteor)return false;
 		return true;
 	}
-    public void levelUp(int x, int y) throws SlickException
+    public void levelUp(int x, int y)
     {
     	if(terrainGrid[x][y] == grass && foliageGrid[x][y] == no_foliage && rnd.nextInt(1000) == 0)
 		{
@@ -333,7 +334,7 @@ public class GameBoard extends Board
             		int life = 35;
             		float newDx = (float) (speed * Math.cos(Math.random() * 2 * Math.PI));
               		float newDy = (float) (speed * Math.sin(Math.random() * 2 * Math.PI));
-              		particleGen.addParticle(new Basic_Particle(gameInfo, new Image("res/smoke_tile.png"), new Vector2f(x * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2, y * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2), new Vector2f(newDx, newDy), life));
+              		particleGen.addParticle(new Basic_Particle(gameInfo, Util.loadImage("res/smoke_tile.png"), new Vector2f(x * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2, y * Game.ScaledTileSize + Game.ScaledTileSize / 2 - Basic_Particle.scale / 2), new Vector2f(newDx, newDy), life));
             	}
     		}
     	}
@@ -342,7 +343,7 @@ public class GameBoard extends Board
     		if(canLevelUp)levelUp(x, y);
     	}
     }
-    public void spreadGrass(int x, int y) throws SlickException
+    public void spreadGrass(int x, int y)
     {
 		int num = rnd.nextInt(4);
     	int tX = x, tY = y;
@@ -361,7 +362,7 @@ public class GameBoard extends Board
     		 if(canGrow)spreadGrass(x, y);
     	}
     }
-    public void spreadFoliage(int x, int y) throws SlickException
+    public void spreadFoliage(int x, int y)
     {
 		int num = rnd.nextInt(4);
     	int tX = x, tY = y;

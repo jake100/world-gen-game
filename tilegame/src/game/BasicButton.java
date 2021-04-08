@@ -1,23 +1,20 @@
 package game;
 
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.state.StateBasedGame;
+import game.util.MouseInput;
 
 public abstract class BasicButton extends BasicUI
 {
 	protected boolean clicked = false, altClicked = false;
-	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException
+	public void update(double delta)
 	{
-		super.update(gc, sbg, delta);
-		Input input = gc.getInput();
-		if(entered && input.isMouseButtonDown(0))
+		super.update(delta);
+		MouseInput mi = new MouseInput();
+		if(entered && mi.clicked)
 		{
 			clicked = true;
 			count = wait;
 		}
-		if(entered && input.isMouseButtonDown(1))
+		if(entered && mi.rightClicked)
 		{
 			altClicked = true;
 			count = wait;

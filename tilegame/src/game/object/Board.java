@@ -4,12 +4,9 @@ import game.object.component.BoardComponent;
 import game.object.component.BoardRender;
 import game.world.World;
 
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.state.StateBasedGame;
 /*
  * abstract class extended by the GameBoard class.
  * Initializes the differed grids, has a Random variable and other fields used by GameBoard.
@@ -35,19 +32,19 @@ public abstract class Board extends BasicGrid
 	{
 		super(gameInfo);
 	}
-    public void update(GameContainer gc, StateBasedGame sbg, World world, int delta) throws SlickException
+    public void update(World world, int delta)
     {
-    	super.update(gc, sbg, world, delta);
+    	super.update(world, delta);
 		for(BoardComponent boardComponent : boardComponents)
         {
-        	boardComponent.update(gc, sbg, world, delta);
+        	boardComponent.update(world, delta);
         }
 	}
-    public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException
+    public void render(Graphics2D g)
 	{
 		for(int i = 0; i < boardComponents.size(); i++)
     	{
-			if(boardComponents.get(i) instanceof BoardRender)((BoardRender)boardComponents.get(i)).render(gc, sbg, g);
+			if(boardComponents.get(i) instanceof BoardRender)((BoardRender)boardComponents.get(i)).render(g);
     	}
 		
 	}

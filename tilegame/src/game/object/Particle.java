@@ -1,21 +1,21 @@
 package game.object;
 
+import game.util.BasicImage;
+import game.util.Image;
 import game.util.MultiStageTimer;
 import game.util.SoundBank;
+import game.util.Util;
+import game.util.Vector2f;
 import game.world.World;
 
+import java.awt.Graphics;
 import java.util.Random;
 
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Vector2f;
-import org.newdawn.slick.state.StateBasedGame;
+
 
 public class Particle extends Basic_Particle
 {
-	protected Image[] anim;
+	protected BasicImage[] anim;
 	protected int animNum = 0, animMax;
 	protected static float speed = .0615f;
 	protected float fireScale = (float) (Math.random() * 1.05f) + .01f, origFireScale = fireScale;
@@ -23,39 +23,39 @@ public class Particle extends Basic_Particle
 	protected MultiStageTimer timer;
 	protected static Random rnd = new Random();
 	protected SoundBank fireSound;
-	public Particle(GameInfo gameInfo, Image[] anim, Vector2f pos) throws SlickException
+	public Particle(GameInfo gameInfo, BasicImage[] anim, Vector2f pos)
 	{
 		super(gameInfo, anim[0], pos, randomDir(), rnd.nextInt(70));
 		this.anim = anim;
 		timer = new MultiStageTimer(time, rnd.nextInt(time.length));
 		animMax = 3;
 		anim = new Image[animMax];
-		anim[0] = new Image("res/fire_0.png");
-		anim[1] = new Image("res/fire_1.png");
-		anim[2] = new Image("res/fire_2.png");
+		anim[0] = Util.loadImage("res/fire_0.png");
+		anim[1] = Util.loadImage("res/fire_1.png");
+		anim[2] = Util.loadImage("res/fire_2.png");
 		rotation = new Random().nextInt(360);
 		animNum = rnd.nextInt(3);
 		anim[animNum].setRotation(new Random().nextInt(360));
 	}
-	public static Particle getFireBall(GameInfo gameInfo, Vector2f pos) throws SlickException
+	public static Particle getFireBall(GameInfo gameInfo,game.util.Vector2f pos)
 	{
-		Image[] anim = new Image[]{new Image("res/fire_0.png"), new Image("res/fire_1.png"), new Image("res/fire_2.png")};
+		Image[] anim = new Image[]{Util.loadImage("res/fire_0.png"), Util.loadImage("res/fire_1.png"), Util.loadImage("res/fire_2.png")};
 		return new Particle(gameInfo, anim, pos);
 	}
-	public static Particle getCload(GameInfo gameInfo, Vector2f pos) throws SlickException
+	public static Particle getCload(GameInfo gameInfo, game.util.Vector2f pos)
 	{
-		Image[] anim = new Image[]{new Image("res/cload_0.png"), new Image("res/cload_1.png"), new Image("res/cload_2.png")};
+		Image[] anim = new Image[]{Util.loadImage("res/cload_0.png"), Util.loadImage("res/cload_1.png"), Util.loadImage("res/cload_2.png")};
 		return new Particle(gameInfo, anim, pos);
 	}
-	public static Particle getPoison(GameInfo gameInfo, Vector2f pos) throws SlickException
+	public static Particle getPoison(GameInfo gameInfo, game.util.Vector2f pos)
 	{
-		Image[] anim = new Image[]{new Image("res/poison_0.png"), new Image("res/poison_1.png"), new Image("res/poison_2.png")};
+		BufferedImage[] anim = new BufferedImage[]{Util.loadImage("res/poison_0.png"), Util.loadImage("res/poison_1.png"), Util.loadImage("res/poison_2.png")};
 		return new Particle(gameInfo, anim, pos);
 	}
-	public void update(GameContainer gc, StateBasedGame sbg, World world, int delta) throws SlickException
+	public void update(World world, int delta)
 	{
-		super.update(gc, sbg, world, delta);
-		timer.update(gc, sbg, world, delta);
+		super.update(world, delta);
+		timer.update(world, delta);
 		if(timer.isCurrent(0))
 		{
 			if(animNum != 0)fireScale = origFireScale;
@@ -81,7 +81,7 @@ public class Particle extends Basic_Particle
 	{
 		return new Vector2f((float) (speed * Math.cos(Math.random() * 2 * Math.PI)), (float) (speed * Math.sin(Math.random() * 2 * Math.PI)));
 	}
-	public void render(GameContainer gc, Graphics g) throws SlickException
+	public void render(Graphics g)
 	{
 		anim[animNum].draw((int)pos.x - anim[animNum].getWidth()/2, (int)pos.y - anim[animNum].getHeight()/2, fireScale);
 	}

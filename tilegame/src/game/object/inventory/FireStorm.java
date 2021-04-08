@@ -11,14 +11,14 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class FireStorm extends Item
 {
-	public FireStorm(GameBoard board) throws SlickException
+	public FireStorm(GameBoard board)
 	{
 		super(board, "res/fire_storm_icon.png", 1);
 	}
-	public void update(GameContainer gc, StateBasedGame sbg, World world, int delta) throws SlickException
+	public void update(World world, int delta)
 	{
 	}
-	public void fire(int x, int y) throws SlickException
+	public void fire(int x, int y)
 	{
 		if(count > 0)
 		{
@@ -31,7 +31,7 @@ public class FireStorm extends Item
 			count--;
 		}
 	}
-	public void fire(int x, int y, Dir dir) throws SlickException
+	public void fire(int x, int y, Dir dir)
 	{
 		
 	}

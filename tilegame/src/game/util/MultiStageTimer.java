@@ -2,9 +2,6 @@ package game.util;
 
 import game.world.World;
 
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.state.StateBasedGame;
 
 public class MultiStageTimer extends Timer
 {
@@ -25,7 +22,7 @@ public class MultiStageTimer extends Timer
 		current = new boolean[time.length];
 		current[start] = true;
 	}
-	public void update(GameContainer gc, StateBasedGame sbg, World world, int delta) throws SlickException
+	public void update(World world, int delta)
 	{
 		counter -= delta;
 		if(counter <= 0)
