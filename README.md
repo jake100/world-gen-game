@@ -8,5 +8,5 @@ The game is turn based.
 
 Kill all the enemies to win the level, you have money that can be used to buy things from the shop that will be put into your inventory. There are weopons, villagers that earn you more money and structures to place.
 The world is being constantly modified, by the enemies, foliage or your weopons.
-
+Finished, you can find it at https://demongeneral.itch.io/alien-terraformers
 
