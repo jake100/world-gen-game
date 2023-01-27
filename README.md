@@ -1,4 +1,4 @@
-game
+game, finished and up on itch.io for download
 ====
 
 Java game made with slick2d that uses procedural world generation to generate the world.
